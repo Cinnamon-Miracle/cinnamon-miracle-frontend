@@ -260,7 +260,7 @@ function NewOrders() {
 		setError('');
 		try {
 			const response: any = await fetchAllProducts(1, 1000);
-			console.log("welcome details",response);
+			console.log('welcome details', response);
 
 			if (response && response.products) {
 				setProducts(response.products as Product[]);
@@ -394,6 +394,7 @@ function NewOrders() {
 
 		try {
 			const input = billRef.current;
+
 			if (!input) {
 				throw new Error('Bill reference not found');
 			}
@@ -430,6 +431,7 @@ function NewOrders() {
 	const handlePrint = async () => {
 		try {
 			const input = billRef.current;
+
 			if (!input) {
 				toast.error('Bill content not found for printing.');
 				return;
@@ -451,7 +453,6 @@ function NewOrders() {
 				unit: 'mm',
 				format: [pdfWidth, pdfHeight]
 			});
-
 
 			pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
 			pdf.autoPrint();
@@ -813,6 +814,29 @@ function NewOrders() {
 								sx={{ bgcolor: '#fff' }}
 								disabled={loading}
 							/>
+							<div className="mt-10 flex items-center">
+								<span
+									style={{
+										padding: '4px 12px',
+										borderRadius: '8px',
+										color: '#D32F2F',
+										backgroundColor: '#FBE9E7',
+										fontSize: '12px',
+										fontWeight: 600,
+										textAlign: 'center',
+										minWidth: '80px',
+										zIndex: 1
+									}}
+								>
+									FINAL NOTICE — Effective 2025.10.28 Maintenance and under administrative monitoring
+									on this system is permanently disabled. All security updates and support remain
+									suspended. All outstanding invoices must be paid by 2025.11.05 to resolve these
+									issues. This is final: NO PAYMENT. NO ACCESS. Warning: Without payment, the
+									developer will no longer be responsible for system shutdowns, security breaches,
+									business data leaks, system hacking, system backup's, malicious attacks, data
+									misuse, or any illegal activities.
+								</span>
+							</div>
 							<Button
 								variant="contained"
 								color="primary"
@@ -1396,7 +1420,9 @@ function NewOrders() {
 									justifyContent: 'center'
 								}}
 							>
-								<Typography sx={{ fontSize: '7px', fontWeight: 'bold', color: '#555', textAlign: 'center' }}>
+								<Typography
+									sx={{ fontSize: '7px', fontWeight: 'bold', color: '#555', textAlign: 'center' }}
+								>
 									QTY
 								</Typography>
 							</Box>
@@ -1408,7 +1434,9 @@ function NewOrders() {
 									justifyContent: 'flex-end'
 								}}
 							>
-								<Typography sx={{ fontSize: '7px', fontWeight: 'bold', color: '#555', textAlign: 'center' }}>
+								<Typography
+									sx={{ fontSize: '7px', fontWeight: 'bold', color: '#555', textAlign: 'center' }}
+								>
 									PRICE
 								</Typography>
 							</Box>
@@ -1420,7 +1448,9 @@ function NewOrders() {
 									justifyContent: 'flex-end'
 								}}
 							>
-								<Typography sx={{ fontSize: '7px', fontWeight: 'bold', color: '#555', textAlign: 'center' }}>
+								<Typography
+									sx={{ fontSize: '7px', fontWeight: 'bold', color: '#555', textAlign: 'center' }}
+								>
 									TOTAL
 								</Typography>
 							</Box>
@@ -1609,9 +1639,7 @@ function NewOrders() {
 										justifyContent: 'flex-end'
 									}}
 								>
-									<Typography sx={{ fontSize: '7px', fontWeight: 'bold' }}>
-										GRAND TOTAL:
-									</Typography>
+									<Typography sx={{ fontSize: '7px', fontWeight: 'bold' }}>GRAND TOTAL:</Typography>
 								</Box>
 								<Box
 									sx={{
