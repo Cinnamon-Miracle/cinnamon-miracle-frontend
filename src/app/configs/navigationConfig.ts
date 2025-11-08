@@ -36,6 +36,14 @@ const navigationConfig: FuseNavItemType[] = [
 				icon: 'heroicons-outline:chart-pie',
 				url: '/dashboards/analytics',
 				auth: ['admin'] // Restrict to 'admin' only
+			},
+			{
+				id: 'dashboards.finance',
+				title: 'ChatBot',
+				type: 'item',
+				icon: 'heroicons-outline:heart',
+				url: '/dashboards/chatbot',
+				auth: ['admin'] // Restrict to 'admin' only
 			}
 		]
 	},

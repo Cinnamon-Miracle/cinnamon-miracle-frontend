@@ -209,7 +209,7 @@ function MultiAxisLineChart({ data, title = 'Multi-Axis Line Chart' }) {
 /**
  * The analytics dashboard app.
  */
-function AnalyticsDashboardApp() {
+function ChatBotApp() {
 	const [chartData, setChartData] = useState(null);
 	const [totalPriceChartData, setTotalPriceChartData] = useState(null);
 	const [orderCountChartData, setOrderCountChartData] = useState(null);
@@ -478,4 +478,4 @@ function AnalyticsDashboardApp() {
 	);
 }
 
-export default AnalyticsDashboardApp;
+export default ChatBotApp;
