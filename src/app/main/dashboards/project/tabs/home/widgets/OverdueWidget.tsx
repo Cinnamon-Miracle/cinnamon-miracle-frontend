@@ -1,63 +1,103 @@
-import IconButton from '@mui/material/IconButton';
-import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
+import { Paper, Box, Typography, styled, useTheme, alpha, IconButton } from '@mui/material';
 import { memo } from 'react';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
-import FuseLoading from '@fuse/core/FuseLoading';
-import { useGetProjectDashboardWidgetsQuery } from '../../../ProjectDashboardApi';
-import { WidgetDataType } from './types/WidgetDataType'; // Adjusted import to use named import
 
-/**
- * The OverdueWidget component.
- */
 interface OverdueWidgetProps {
-	value?: number; // Define the expected type for the value prop
+	value?: number;
 }
 
+// Styled root matching the new design system
+const WidgetRoot = styled(Paper)(({ theme }) => ({
+	position: 'relative',
+	borderRadius: '24px',
+	padding: theme.spacing(3, 4),
+	display: 'flex',
+	flexDirection: 'column',
+	alignItems: 'center',
+	justifyContent: 'center',
+	textAlign: 'center',
+	minHeight: '180px',
+	boxShadow: '0 8px 24px rgba(0,0,0,0.06)',
+	border: `1px solid ${theme.palette.divider}`,
+	backgroundColor: '#ffffff',
+	transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+	overflow: 'hidden',
+	// RED accent at the BOTTOM
+	borderBottom: `8px solid ${theme.palette.error.main}`,
+	'&:hover': {
+		transform: 'translateY(-5px)',
+		boxShadow: '0 16px 32px rgba(0,0,0,0.12)'
+	}
+}));
+
+const IconWrapper = styled(Box)(({ theme }) => ({
+	position: 'absolute',
+	top: 16,
+	right: 16,
+	opacity: 0.5
+}));
+
 function OverdueWidget({ value = 0 }: OverdueWidgetProps) {
-	console.log('OverdueWidget value:', value);
-
-	const { data: widgets, isLoading } = useGetProjectDashboardWidgetsQuery();
-	const widget = widgets?.overdue as WidgetDataType | undefined;
-
-	if (isLoading) {
-		return <FuseLoading />;
-	}
-
-	if (!widget) {
-		return null;
-	}
-
-	const { title, data } = widget;
+	const theme = useTheme();
 
 	return (
-		<Paper className="flex flex-col flex-auto shadow rounded-2xl overflow-hidden">
-			<div className="flex items-center justify-between px-8 pt-12">
-				<Typography
-					className="px-16 text-lg font-medium tracking-tight leading-6 truncate"
-					color="text.secondary"
-				>
-					Total Boatman Amount
-				</Typography>
-				<IconButton aria-label="more" size="large">
-					<FuseSvgIcon>heroicons-outline:dots-vertical</FuseSvgIcon>
+		<WidgetRoot>
+			<IconWrapper>
+				<IconButton size="small">
+					<FuseSvgIcon
+						size={20}
+						color="action"
+					>
+						heroicons-outline:dots-vertical
+					</FuseSvgIcon>
 				</IconButton>
-			</div>
-			<div className="text-center mt-8">
-				<Typography
-					className="text-3xl sm:text-3xl font-bold tracking-tight leading-none text-blue-600"
-				>
-					{value.toLocaleString('en-US', { style: 'currency', currency: 'LKR' })}
-				</Typography>
-				<Typography className="text-lg font-medium text-red-600">
-				</Typography>
-			</div>
-			<Typography
-				className="flex items-baseline justify-center w-full mt-20 mb-24"
-				color="text.secondary"
+			</IconWrapper>
+
+			{/* Red Visual Anchor Icon */}
+			<Box
+				sx={{
+					mb: 2,
+					p: 1.5,
+					borderRadius: '50%',
+					bgcolor: alpha(theme.palette.error.main, 0.1),
+					color: theme.palette.error.main,
+					display: 'flex',
+					alignItems: 'center',
+					justifyContent: 'center'
+				}}
 			>
+				<FuseSvgIcon size={32}>heroicons-outline:currency-dollar</FuseSvgIcon>
+			</Box>
+
+			<Typography
+				sx={{
+					fontSize: '1.1rem',
+					fontWeight: 800,
+					textTransform: 'uppercase',
+					letterSpacing: '0.05em',
+					color: 'text.secondary',
+					mb: 1
+				}}
+			>
+				Total Boatman Cost
 			</Typography>
-		</Paper>
+
+			<Typography
+				sx={{
+					fontSize: '2.8rem', // Large for readability
+					fontWeight: 900,
+					lineHeight: 1,
+					color: theme.palette.error.dark, // Dark red for good contrast
+					fontVariantNumeric: 'tabular-nums'
+				}}
+			>
+				{value.toLocaleString('en-US', {
+					style: 'currency',
+					currency: 'LKR',
+					maximumFractionDigits: 0
+				})}
+			</Typography>
+		</WidgetRoot>
 	);
 }
 

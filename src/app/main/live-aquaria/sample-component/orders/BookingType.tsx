@@ -59,10 +59,9 @@ function ReturnUpdateModal({ isOpen, onClose, groupCode, orderCode, onUpdate }) 
 
 	// 2. FIX: The 'values' object will now correctly contain all three fields.
 	const handleSubmit = (values, { setSubmitting }) => {
-		console.log('Return Update Form Submitted:', values);
-
 		const data = {
 			amountToReduce: values.amountToReduce,
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
 			orderCode: values.orderCode
 		};
 
@@ -71,18 +70,20 @@ function ReturnUpdateModal({ isOpen, onClose, groupCode, orderCode, onUpdate }) 
 			.then(() => {
 				toast.success('Return update processed!');
 
+				// eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
 				if (onUpdate) onUpdate(values.amountToReduce);
 
 				onClose();
 			})
-			.catch((error) => {
-				console.error('Error updating return:', error);
-			})
+			.catch((error) => {})
 			.finally(() => {
 				setSubmitting(false);
 			});
 	};
 
+	{
+		/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */
+	}
 	return (
 		<Modal
 			open={isOpen}
@@ -836,6 +837,7 @@ function BookingType() {
 					setOrderGroups(groups);
 
 					// Setup pagination data from response
+					// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 					const paginationData = response.pagination || {};
 					const totalOrders = paginationData.totalOrders || 0;
 					const totalPages = paginationData.totalPages || Math.ceil(totalOrders / pageSize) || 1;
@@ -1346,7 +1348,6 @@ function BookingType() {
 											<Button
 												className="ml-20 mr-3.5 min-w-[120px] min-h-[36px] max-h-[36px] text-[10px] sm:text-[12px] lg:text-[14px] text-white font-500 py-0 rounded-[6px] bg-amber-900 hover:bg-amber-900"
 												type="button"
-												disabled
 												variant="contained"
 												startIcon={<ArrowCircleLeft />}
 												onClick={() => {
@@ -1361,25 +1362,25 @@ function BookingType() {
 											>
 												{t('Return Update')}
 											</Button>
-											<div className="mt-10 flex items-center">
-												<div className="mt-px flex-auto border-t" />
-												<span
-													style={{
-														padding: '4px 12px',
-														borderRadius: '8px',
-														color: '#D32F2F',
-														backgroundColor: '#FBE9E7',
-														fontSize: '12px',
-														fontWeight: 600,
-														textAlign: 'center',
-														minWidth: '80px',
-														zIndex: 1
-													}}
-												>
-													Return update functionality terminated. Feature-wise payment not received. No payment. No access. That’s final.
-												</span>
-												<div className="mt-px flex-auto border-t" />
-											</div>
+											{/* <div className="mt-10 flex items-center"> */}
+											{/*	<div className="mt-px flex-auto border-t" /> */}
+											{/*	<span */}
+											{/*		style={{ */}
+											{/*			padding: '4px 12px', */}
+											{/*			borderRadius: '8px', */}
+											{/*			color: '#D32F2F', */}
+											{/*			backgroundColor: '#FBE9E7', */}
+											{/*			fontSize: '12px', */}
+											{/*			fontWeight: 600, */}
+											{/*			textAlign: 'center', */}
+											{/*			minWidth: '80px', */}
+											{/*			zIndex: 1 */}
+											{/*		}} */}
+											{/*	> */}
+											{/*		Return update functionality terminated. Feature-wise payment not received. No payment. No access. That’s final. */}
+											{/*	</span> */}
+											{/*	<div className="mt-px flex-auto border-t" /> */}
+											{/* </div> */}
 										</Box>
 									</Grid>
 								</Grid>

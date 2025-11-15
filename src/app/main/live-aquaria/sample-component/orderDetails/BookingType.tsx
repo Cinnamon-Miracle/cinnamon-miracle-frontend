@@ -127,7 +127,7 @@ function BookingType() {
 	const { t } = useTranslation('shippingTypes');
 	const [productOrders, setProductOrders] = useState<ProductOrder[]>([]);
 	const [pageNo, setPageNo] = useState<number>(0);
-	const [pageSize, setPageSize] = useState<number>(15);
+	const [pageSize, setPageSize] = useState<number>(5);
 	const [pagination, setPagination] = useState<Pagination>({
 		currentPage: 1,
 		totalPages: 1,

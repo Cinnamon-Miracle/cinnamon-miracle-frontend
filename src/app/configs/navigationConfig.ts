@@ -41,7 +41,7 @@ const navigationConfig: FuseNavItemType[] = [
 				id: 'dashboards.finance',
 				title: 'AI Advisor',
 				type: 'item',
-				icon: 'heroicons-outline:heart',
+				icon: 'heroicons-outline:sparkles',
 				url: '/dashboards/chatbot',
 				auth: ['admin'] // Restrict to 'admin' only
 			}

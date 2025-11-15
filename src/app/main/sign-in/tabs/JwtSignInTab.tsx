@@ -7,25 +7,25 @@ function JwtSignInTab() {
 		<div className="w-full">
 			<JwtSignInForm />
 
-			<div className="mt-32 flex items-center">
-				<div className="mt-px flex-auto border-t" />
-				<span
-					style={{
-						padding: '4px 12px',
-						borderRadius: '16px',
-						color: '#D32F2F',
-						backgroundColor: '#FBE9E7',
-						fontSize: '12px',
-						fontWeight: 500,
-						textAlign: 'center',
-						minWidth: '80px',
-						zIndex: 1
-					}}
-				>
-					This feature is currently disabled at the business owner's request.
-				</span>
-				<div className="mt-px flex-auto border-t" />
-			</div>
+			{/* <div className="mt-32 flex items-center"> */}
+			{/*	<div className="mt-px flex-auto border-t" /> */}
+			{/*	<span */}
+			{/*		style={{ */}
+			{/*			padding: '4px 12px', */}
+			{/*			borderRadius: '16px', */}
+			{/*			color: '#D32F2F', */}
+			{/*			backgroundColor: '#FBE9E7', */}
+			{/*			fontSize: '12px', */}
+			{/*			fontWeight: 500, */}
+			{/*			textAlign: 'center', */}
+			{/*			minWidth: '80px', */}
+			{/*			zIndex: 1 */}
+			{/*		}} */}
+			{/*	> */}
+			{/*		This feature is currently disabled at the business owner's request. */}
+			{/*	</span> */}
+			{/*	<div className="mt-px flex-auto border-t" /> */}
+			{/* </div> */}
 
 			<div className="mt-32 flex items-center space-x-16">
 				<Button

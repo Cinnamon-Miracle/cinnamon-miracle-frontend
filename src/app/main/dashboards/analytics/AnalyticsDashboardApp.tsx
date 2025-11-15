@@ -301,8 +301,9 @@ function AnalyticsDashboardApp() {
 					>
 						<AlertTitle>Access Denied</AlertTitle>
 						<Typography variant="body1">
-							You do not have the necessary permissions to view Business Analytics.
-							Sorry for the inconvenience. To access Business Analytics, please log in with an account that has Administrator privileges.
+							You do not have the necessary permissions to view Business Analytics. Sorry for the
+							inconvenience. To access Business Analytics, please log in with an account that has
+							Administrator privileges.
 						</Typography>
 					</Alert>
 				</Paper>
@@ -332,29 +333,29 @@ function AnalyticsDashboardApp() {
 							elevation={1}
 							sx={{ p: 2, height: '100%' }}
 						>
-							<div className="mt-10 flex items-center mb-10">
-								<span
-									style={{
-										padding: '4px 12px',
-										borderRadius: '8px',
-										color: '#D32F2F',
-										backgroundColor: '#FBE9E7',
-										fontSize: '12px',
-										fontWeight: 600,
-										textAlign: 'center',
-										minWidth: '80px',
-										zIndex: 1
-									}}
-								>
-									FINAL NOTICE — Effective 2025.10.28 Maintenance and under administrative monitoring
-									on this system is permanently disabled. All security updates and support remain
-									suspended. All outstanding invoices must be paid by 2025.11.05 to resolve these
-									issues. This is final: NO PAYMENT. NO ACCESS. Warning: Without payment, the
-									developer will no longer be responsible for system shutdowns, security breaches,
-									business data leaks, system hacking, system backup's, malicious attacks, data
-									misuse, or any illegal activities.
-								</span>
-							</div>
+							{/* <div className="mt-10 flex items-center mb-10"> */}
+							{/*	<span */}
+							{/*		style={{ */}
+							{/*			padding: '4px 12px', */}
+							{/*			borderRadius: '8px', */}
+							{/*			color: '#D32F2F', */}
+							{/*			backgroundColor: '#FBE9E7', */}
+							{/*			fontSize: '12px', */}
+							{/*			fontWeight: 600, */}
+							{/*			textAlign: 'center', */}
+							{/*			minWidth: '80px', */}
+							{/*			zIndex: 1 */}
+							{/*		}} */}
+							{/*	> */}
+							{/*		FINAL NOTICE — Effective 2025.10.28 Maintenance and under administrative monitoring */}
+							{/*		on this system is permanently disabled. All security updates and support remain */}
+							{/*		suspended. All outstanding invoices must be paid by 2025.11.05 to resolve these */}
+							{/*		issues. This is final: NO PAYMENT. NO ACCESS. Warning: Without payment, the */}
+							{/*		developer will no longer be responsible for system shutdowns, security breaches, */}
+							{/*		business data leaks, system hacking, system backup's, malicious attacks, data */}
+							{/*		misuse, or any illegal activities. */}
+							{/*	</span> */}
+							{/* </div> */}
 							<Typography
 								variant="h6"
 								gutterBottom

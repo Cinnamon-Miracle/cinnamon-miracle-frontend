@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import JwtLoginTab from './tabs/JwtSignInTab';
 import FirebaseSignInTab from './tabs/FirebaseSignInTab';
 import AwsSignInTab from './tabs/AwsSignInTab';
-import image from '../../assets/cinnamon-sticks-are-tied-together-with-candle-background.jpg';
+import image from '../../assets/medium-shot-woman-celebrating-new-year-s-eve.jpg';
 
 const tabs = [
 	{
@@ -18,56 +18,69 @@ const tabs = [
 	}
 ];
 
-/**
- * The sign in page.
- */
 function SignInPage() {
 	const [selectedTabId, setSelectedTabId] = useState(tabs[0].id);
 
-	function handleSelectTab(id: string) {
+	const handleSelectTab = (id: string) => {
 		setSelectedTabId(id);
-	}
+	};
 
 	return (
-		<div className="flex min-w-0 flex-auto flex-col items-center sm:justify-center md:p-40">
-			<Paper className="flex min-h-full w-full overflow-hidden rounded-0 sm:min-h-auto sm:w-auto sm:rounded-2xl sm:shadow md:w-full md:max-w-6xl">
-				<div className="w-full px-16 py-32 ltr:border-r-1 rtl:border-l-1 sm:w-auto sm:p-48 md:p-64">
+		<div className="flex min-h-screen w-full flex-col items-center justify-center bg-gray-50">
+			<Paper
+				elevation={3}
+				className="flex w-full max-w-6xl overflow-hidden rounded-2xl bg-white shadow-lg"
+				sx={{
+					borderRadius: 4,
+					'&::-webkit-scrollbar': { display: 'none' },
+					msOverflowStyle: 'none',
+					scrollbarWidth: 'none'
+				}}
+			>
+				{/* LEFT SECTION */}
+				<div className="w-full px-16 py-32 sm:w-auto sm:p-48 md:p-64">
 					<CardContent className="mx-auto w-full max-w-320 sm:mx-0 sm:w-320">
-						{/* <img
-							className="w-48"
+						{/* Logo */}
+						<img
+							className="w-48 mb-8"
 							src="assets/images/logo/logo.svg"
 							alt="logo"
-						/> */}
+						/>
 
-						<Typography className="text-4xl text-gray-800 font-extrabold leading-tight tracking-tight">
+						{/* Title */}
+						<Typography className="text-4xl text-gray-900 font-extrabold leading-tight tracking-tight">
 							Sign In
 						</Typography>
+
+						{/* Sub text */}
 						<div className="mt-2 flex items-baseline font-medium">
-							<Typography>Don't have an account?</Typography>
+							<Typography className="text-gray-700">Don't have an account?</Typography>
 							<Link
-								className="ml-4"
-								// to="/sign-up"
+								className="ml-4 text-blue-600 hover:underline"
 								to=""
 							>
 								Sign up
 							</Link>
 						</div>
 
-						{/* Remove Logo */}
-
-						{/* eslint-disable-next-line react/jsx-no-undef */}
-
-						{selectedTabId === 'jwt' && <JwtLoginTab />}
-						{selectedTabId === 'firebase' && <FirebaseSignInTab />}
-						{selectedTabId === 'aws' && <AwsSignInTab />}
+						{/* Tabs */}
+						<div className="mt-24">
+							{selectedTabId === 'jwt' && <JwtLoginTab />}
+							{selectedTabId === 'firebase' && <FirebaseSignInTab />}
+							{selectedTabId === 'aws' && <AwsSignInTab />}
+						</div>
 					</CardContent>
 				</div>
+
+				{/* RIGHT IMAGE SECTION */}
 				<Box
-					className="relative hidden h-full flex-auto items-center justify-center overflow-hidden p-64 md:flex lg:px-112"
+					className="relative hidden h-full flex-auto items-center justify-center md:flex"
 					sx={{
 						backgroundImage: `url(${image})`,
 						backgroundSize: 'cover',
-						backgroundPosition: 'center'
+						backgroundPosition: 'center',
+						filter: 'brightness(0.85)',
+						minWidth: '70%' // Increase width ONLY
 					}}
 				/>
 			</Paper>

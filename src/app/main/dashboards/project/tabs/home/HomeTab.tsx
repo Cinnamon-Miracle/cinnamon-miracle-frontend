@@ -2,8 +2,6 @@ import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import {
-	Alert,
-	AlertTitle,
 	Box,
 	Grid,
 	Paper,
@@ -14,14 +12,15 @@ import {
 	TableHead,
 	TableRow,
 	Typography,
-	Divider,
-	styled
+	styled,
+	useTheme,
+	alpha,
+	Chip,
+	Fade
 } from '@mui/material';
-// --- Add imports for Date Picker ---
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-
 import SummaryWidget from './widgets/SummaryWidget';
 import OverdueWidget from './widgets/OverdueWidget';
 import IssuesWidget from './widgets/IssuesWidget';
@@ -31,7 +30,7 @@ import {
 	dailyPerformanceOfGuidesAndBoatmen
 } from '../../../../../axios/services/mega-city-services/common/CommonService';
 
-// Original types
+// --- Interfaces ---
 interface BusinessSummary {
 	orderCount: number;
 	totalBoatmanCost: number;
@@ -47,7 +46,6 @@ interface ApiResponse {
 	data: BusinessSummary;
 }
 
-// --- NEW TYPES for detailed performance data ---
 interface Guide {
 	name: string;
 	totalEarnings: number;
@@ -61,7 +59,7 @@ interface Boatman {
 }
 
 interface DetailedSummary {
-	date: string; // The response might still return a single date or date range. We'll use the title as requested.
+	date: string;
 	guides: Guide[];
 	boatmen: Boatman[];
 	summary: {
@@ -77,68 +75,135 @@ interface DetailedApiResponse {
 	success: boolean;
 	data: DetailedSummary;
 }
-// --- END NEW TYPES ---
 
-// Styled component for a cleaner table header
-const StyledTableHead = styled(TableHead)(({ theme }) => ({
-	backgroundColor: theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[800],
+// ---- MODERN HIGH-CONTRAST COMPONENTS ----
+
+const ProCard = styled(Paper)(({ theme }) => ({
+	borderRadius: '24px',
+	boxShadow: '0 10px 30px -5px rgba(0,0,0,0.1)',
+	border: `1px solid ${theme.palette.grey[200]}`,
+	overflow: 'hidden',
+	background: '#ffffff'
+}));
+
+// MODERN DARK HEADER FOR TABLES
+const ModernTableHead = styled(TableHead)(({ theme }) => ({
 	'& .MuiTableCell-root': {
-		fontWeight: 'bold'
+		backgroundColor: '#1e293b', // Dark slate blue/grey for high contrast
+		color: '#ffffff',
+		fontSize: '0.9rem',
+		textTransform: 'uppercase',
+		letterSpacing: '0.1em',
+		fontWeight: 700,
+		padding: theme.spacing(2),
+		borderBottom: 'none'
 	}
 }));
 
-// Helper to format date to YYYY-MM-DD for the API
-const formatDateForApi = (date: Date): string => {
-	return date.toISOString().split('T')[0];
-};
+// ZEBRA STRIPED ROWS FOR READABILITY
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+	'&:nth-of-type(odd)': {
+		backgroundColor: alpha(theme.palette.primary.main, 0.03) // Very faint alternating color
+	},
+	'&:hover': {
+		backgroundColor: `${alpha(theme.palette.primary.main, 0.08)} !important` // Clear hover state
+	},
+	// Hide last border
+	'&:last-child td, &:last-child th': {
+		border: 0
+	}
+}));
 
-// Helper to format date for display in the title
-const formatDateForTitle = (date: Date | null): string => {
-	if (!date) return '';
+const BaseTile = styled(Box)(({ theme }) => ({
+	padding: theme.spacing(3),
+	borderRadius: '20px',
+	display: 'flex',
+	flexDirection: 'column',
+	alignItems: 'center',
+	justifyContent: 'center',
+	textAlign: 'center',
+	minHeight: '160px',
+	transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+	border: `1px solid ${theme.palette.divider}`,
+	backgroundColor: '#fff',
+	'&:hover': {
+		transform: 'translateY(-5px)',
+		boxShadow: '0 12px 24px -10px rgba(0,0,0,0.15)'
+	},
+	'& .metric-label': {
+		fontSize: '1.15rem',
+		fontWeight: 800,
+		textTransform: 'uppercase',
+		letterSpacing: '0.03em',
+		marginBottom: theme.spacing(1.5),
+		color: theme.palette.text.secondary
+	},
+	'& .metric-value': {
+		fontSize: '2.6rem',
+		fontWeight: 900,
+		lineHeight: 1.1,
+		color: theme.palette.text.primary
+	},
+	'& .currency': {
+		fontSize: '0.5em',
+		fontWeight: 700,
+		marginRight: '6px',
+		verticalAlign: 'super',
+		opacity: 0.6
+	}
+}));
 
-	// Adjust options as needed for your preferred format
-	return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
-};
+const GuideTile = styled(BaseTile)(({ theme }) => ({
+	borderBottom: `6px solid ${theme.palette.primary.main}`, // Color coded bottom border
+	'& .metric-value': { color: theme.palette.primary.dark }
+}));
 
-/**
- * The HomeTab component.
- */
+const BoatmanTile = styled(BaseTile)(({ theme }) => ({
+	borderBottom: `6px solid ${theme.palette.info.main}`,
+	'& .metric-value': { color: theme.palette.info.dark }
+}));
+
+const GrandTotalTile = styled(BaseTile)(({ theme }) => ({
+	background: `linear-gradient(135deg, ${theme.palette.primary.dark} 0%, #0f172a 100%)`,
+	border: 'none',
+	'& .metric-label': { color: alpha('#fff', 0.7) },
+	'& .metric-value': { color: '#fff', fontSize: '3rem' },
+	'& .currency': { color: alpha('#fff', 0.7), opacity: 1 }
+}));
+
+// --- Helpers ---
+const formatDateForApi = (date: Date): string => date.toISOString().split('T')[0];
+const formatDateForTitle = (date: Date | null): string =>
+	!date ? '' : date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+// === MAIN COMPONENT ===
 function HomeTab() {
+	const theme = useTheme();
 	const userRole = localStorage.getItem('loginUserRole');
 	const isRestricted = userRole === 'staff';
 
 	const [summaryData, setSummaryData] = useState<BusinessSummary | undefined>();
 	const [detailedData, setDetailedData] = useState<DetailedSummary | null>(null);
-	// --- State for Date Pickers ---
 	const [startDate, setStartDate] = useState<Date | null>(new Date());
 	const [endDate, setEndDate] = useState<Date | null>(new Date());
 
-	const container = {
-		show: {
-			transition: {
-				staggerChildren: 0.04
-			}
-		}
-	};
+	const container = { show: { transition: { staggerChildren: 0.05 } } };
 	const item = {
 		hidden: { opacity: 0, y: 20 },
 		show: { opacity: 1, y: 0 }
 	};
 
+	// --- Effects ---
 	useEffect(() => {
 		if (!isRestricted) {
 			const fetchData = async () => {
 				try {
-					// Fetch original summary data (runs only once)
-					const summaryResponse = (await businessSummery()) as ApiResponse;
+					const res = (await businessSummery()) as ApiResponse;
 
-					if (summaryResponse.success) {
-						setSummaryData(summaryResponse.data);
-					} else {
-						toast.error(summaryResponse.message || 'Failed to fetch summary');
-					}
+					if (res.success) setSummaryData(res.data);
+					else toast.error(res.message || 'Failed to fetch summary');
 				} catch (error) {
-					toast.error(error instanceof Error ? error.message : 'An error occurred while fetching summary');
+					toast.error(error instanceof Error ? error.message : 'An error occurred');
 				}
 			};
 			fetchData();
@@ -146,70 +211,73 @@ function HomeTab() {
 	}, [isRestricted]);
 
 	useEffect(() => {
-		// This separate useEffect handles fetching performance data when dates change.
 		if (!isRestricted && startDate && endDate) {
 			if (startDate > endDate) {
 				toast.error('Start date cannot be after end date.');
 				return;
 			}
 
-			const fetchPerformanceData = async () => {
+			const fetchPerformance = async () => {
 				try {
-					const detailedResponse = (await dailyPerformanceOfGuidesAndBoatmen(
+					const res = (await dailyPerformanceOfGuidesAndBoatmen(
 						formatDateForApi(startDate),
 						formatDateForApi(endDate)
 					)) as DetailedApiResponse;
 
-					if (detailedResponse.success) {
-						setDetailedData(detailedResponse.data);
-					} else {
-						toast.error('Failed to fetch daily performance data');
-					}
+					if (res.success) setDetailedData(res.data);
+					else toast.error('Failed to fetch performance data');
 				} catch (error) {
-					const errorMessage = error instanceof Error ? error.message : 'An error occurred';
-					toast.error(errorMessage);
+					toast.error(error instanceof Error ? error.message : 'An error occurred');
 				}
 			};
-
-			fetchPerformanceData();
+			fetchPerformance();
 		}
-	}, [isRestricted, startDate, endDate]); // Re-run when dates change
+	}, [isRestricted, startDate, endDate]);
 
 	if (isRestricted) {
 		return (
-			<Box sx={{ p: 3 }}>
-				<Paper
-					elevation={3}
-					sx={{ p: 3, display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '200px' }}
-				>
-					<Alert
-						severity="error"
-						sx={{ width: '100%', '.MuiAlert-message': { width: '100%' } }}
-					>
-						<AlertTitle>Access Denied</AlertTitle>
-						<Typography variant="body1">
-							You don't have permissions to view the cinnamon miracle erp dashboard.
+			<Fade
+				in
+				timeout={800}
+			>
+				<Box sx={{ p: 4, display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
+					<ProCard sx={{ p: 6, textAlign: 'center', maxWidth: 500 }}>
+						<Typography
+							variant="h1"
+							sx={{ fontSize: '4rem', mb: 2 }}
+						>
+							🔒
 						</Typography>
-					</Alert>
-				</Paper>
-			</Box>
+						<Typography
+							variant="h4"
+							sx={{ fontWeight: 800, mb: 2 }}
+						>
+							Access Restricted
+						</Typography>
+					</ProCard>
+				</Box>
+			</Fade>
 		);
 	}
 
-	// Main component render
 	return (
 		<LocalizationProvider dateAdapter={AdapterDateFns}>
 			<Box
-				className="w-full min-w-0 p-24"
 				component={motion.div}
 				initial="hidden"
 				animate="show"
 				variants={container}
+				sx={{
+					maxWidth: '1600px',
+					mx: 'auto',
+					p: { xs: 2, md: 4 },
+					bgcolor: '#f1f5f9' // Slightly darker background for contrast
+				}}
 			>
-				{/* Top Summary Widgets */}
+				{/* --- Top Summary Widgets --- */}
 				<motion.div
 					variants={item}
-					className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-24 w-full"
+					className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6"
 				>
 					<SummaryWidget value={summaryData?.groupCodeCount ?? 0} />
 					<OverdueWidget value={summaryData?.totalBoatmanCost ?? 0} />
@@ -217,236 +285,286 @@ function HomeTab() {
 					<FeaturesWidget value={summaryData?.totalSalesAmount ?? 0} />
 				</motion.div>
 
-				{/* --- Daily Performance Section --- */}
 				{detailedData && (
-					<motion.div
-						variants={item}
-						className="mt-24"
-					>
-						<Paper
-							elevation={3}
-							sx={{ p: 3, borderRadius: '12px' }}
-						>
-							{/* Section Header with Title and Date Pickers */}
-							<Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-								<Typography
-									variant="h5"
-									component="h2"
-									sx={{ fontWeight: 'bold' }}
-								>
-									Daily Performance Summary ({`${formatDateForTitle(startDate)}`}
-									{endDate && startDate && startDate.getTime() !== endDate.getTime()
-										? ` - ${formatDateForTitle(endDate)}`
-										: ''}
-									)
-								</Typography>
-
-								{/* Compact Date Pickers */}
-								<Box sx={{ display: 'flex', gap: 3 }}>
-									<DatePicker
-										label="Start Date"
-										value={startDate}
-										onChange={(newValue) => setStartDate(newValue)}
-										slotProps={{ textField: { size: 'small' } }}
-									/>
-									<DatePicker
-										label="End Date"
-										value={endDate}
-										onChange={(newValue) => setEndDate(newValue)}
-										slotProps={{ textField: { size: 'small' } }}
-									/>
-								</Box>
-							</Box>
-							<Divider />
-
-							{/* Overall Earnings Summary */}
-							<Box sx={{ my: 3 }}>
+					<motion.div variants={item}>
+						<ProCard elevation={0}>
+							<Box sx={{ p: { xs: 3, md: 5 } }}>
+								{/* --- Header Row --- */}
 								<Grid
 									container
-									spacing={2}
-									justifyContent="center"
+									spacing={3}
 									alignItems="center"
+									sx={{ mb: 6 }}
 								>
 									<Grid
 										item
 										xs={12}
-										sm={4}
-										sx={{ textAlign: 'center' }}
+										lg={6}
 									>
 										<Typography
-											color="text.secondary"
-											variant="button"
-											display="block"
+											variant="h4"
+											sx={{ fontWeight: 900, color: '#1e293b' }}
 										>
-											Guide Earnings
+											Performance Summary
 										</Typography>
 										<Typography
 											variant="h6"
-											sx={{ fontWeight: 600 }}
+											sx={{ fontWeight: 700, color: 'text.secondary', mt: 1 }}
 										>
-											LKR {detailedData.summary.totalGuidesEarnings.toLocaleString()}
+											{`${formatDateForTitle(startDate)} — ${formatDateForTitle(endDate)}`}
 										</Typography>
+									</Grid>
+
+									<Grid
+										item
+										xs={12}
+										lg={6}
+									>
+										<Box
+											sx={{
+												display: 'flex',
+												gap: 2,
+												justifyContent: { xs: 'flex-start', lg: 'flex-end' }
+											}}
+										>
+											<DatePicker
+												label="START DATE"
+												value={startDate}
+												onChange={setStartDate}
+												slotProps={{
+													textField: {
+														variant: 'outlined',
+														sx: { width: 180, '& .MuiInputBase-input': { fontWeight: 700 } }
+													}
+												}}
+											/>
+											<DatePicker
+												label="END DATE"
+												value={endDate}
+												onChange={setEndDate}
+												slotProps={{
+													textField: {
+														variant: 'outlined',
+														sx: { width: 180, '& .MuiInputBase-input': { fontWeight: 700 } }
+													}
+												}}
+											/>
+										</Box>
+									</Grid>
+								</Grid>
+
+								{/* --- CENTERED INCOME CARDS --- */}
+								<Grid
+									container
+									spacing={4}
+									sx={{ mb: 8 }}
+								>
+									<Grid
+										item
+										xs={12}
+										md={4}
+									>
+										<GuideTile>
+											<Typography className="metric-label">Guide Earnings</Typography>
+											<Typography className="metric-value">
+												<span className="currency">LKR</span>
+												{detailedData.summary.totalGuidesEarnings.toLocaleString()}
+											</Typography>
+										</GuideTile>
 									</Grid>
 									<Grid
 										item
 										xs={12}
-										sm={4}
-										sx={{ textAlign: 'center' }}
+										md={4}
 									>
-										<Typography
-											color="text.secondary"
-											variant="button"
-											display="block"
-										>
-											Boatmen Earnings
-										</Typography>
-										<Typography
-											variant="h6"
-											sx={{ fontWeight: 600 }}
-										>
-											LKR {detailedData.summary.totalBoatmenEarnings.toLocaleString()}
-										</Typography>
+										<BoatmanTile>
+											<Typography className="metric-label">Boatmen Earnings</Typography>
+											<Typography className="metric-value">
+												<span className="currency">LKR</span>
+												{detailedData.summary.totalBoatmenEarnings.toLocaleString()}
+											</Typography>
+										</BoatmanTile>
 									</Grid>
 									<Grid
 										item
 										xs={12}
-										sm={4}
-										sx={{ textAlign: 'center', borderLeft: { sm: '1px solid #e0e0e0' } }}
+										md={4}
 									>
-										<Typography
-											color="text.secondary"
-											variant="button"
-											display="block"
+										<GrandTotalTile>
+											<Typography className="metric-label">Total Revenue</Typography>
+											<Typography className="metric-value">
+												<span className="currency">LKR</span>
+												{detailedData.summary.grandTotal.toLocaleString()}
+											</Typography>
+										</GrandTotalTile>
+									</Grid>
+								</Grid>
+
+								{/* --- MODERN BOLD TABLES --- */}
+								<Grid
+									container
+									spacing={6}
+								>
+									{/* Guides Table */}
+									<Grid
+										item
+										xs={12}
+										xl={6}
+									>
+										<Box
+											sx={{
+												mb: 2,
+												display: 'flex',
+												alignItems: 'center',
+												justifyContent: 'space-between'
+											}}
 										>
-											Grand Total
-										</Typography>
-										<Typography
-											variant="h5"
-											color="primary"
-											sx={{ fontWeight: 'bold' }}
+											<Typography
+												variant="h5"
+												sx={{ fontWeight: 800, color: '#1e293b' }}
+											>
+												TOP GUIDES
+											</Typography>
+											<Chip
+												label={`${detailedData.summary.totalGuides} Active`}
+												color="primary"
+												sx={{ fontWeight: 700 }}
+											/>
+										</Box>
+										<TableContainer
+											sx={{
+												boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+												borderRadius: '12px',
+												border: `1px solid ${theme.palette.divider}`
+											}}
 										>
-											LKR {detailedData.summary.grandTotal.toLocaleString()}
-										</Typography>
+											<Table>
+												<ModernTableHead>
+													<TableRow>
+														<TableCell>Guide Name</TableCell>
+														<TableCell align="center">Total Orders</TableCell>
+														<TableCell align="right">Earnings (LKR)</TableCell>
+													</TableRow>
+												</ModernTableHead>
+												<TableBody>
+													{detailedData.guides.map((g, i) => (
+														<StyledTableRow key={i}>
+															<TableCell
+																sx={{
+																	fontSize: '1.05rem',
+																	fontWeight: 700,
+																	color: '#334155'
+																}}
+															>
+																{i + 1}. {g.name}
+															</TableCell>
+															<TableCell align="center">
+																<Chip
+																	label={g.orderCount}
+																	color="primary"
+																	size="small"
+																	sx={{ fontWeight: 800, minWidth: '40px' }}
+																/>
+															</TableCell>
+															<TableCell
+																align="right"
+																sx={{
+																	fontSize: '1.15rem',
+																	fontWeight: 800,
+																	fontFamily: 'monospace',
+																	color: '#0f172a'
+																}}
+															>
+																{g.totalEarnings.toLocaleString()}
+															</TableCell>
+														</StyledTableRow>
+													))}
+												</TableBody>
+											</Table>
+										</TableContainer>
+									</Grid>
+
+									{/* Boatmen Table */}
+									<Grid
+										item
+										xs={12}
+										xl={6}
+									>
+										<Box
+											sx={{
+												mb: 2,
+												display: 'flex',
+												alignItems: 'center',
+												justifyContent: 'space-between'
+											}}
+										>
+											<Typography
+												variant="h5"
+												sx={{ fontWeight: 800, color: '#1e293b' }}
+											>
+												TOP BOATMEN
+											</Typography>
+											<Chip
+												label={`${detailedData.summary.totalBoatmen} Active`}
+												color="info"
+												sx={{ fontWeight: 700 }}
+											/>
+										</Box>
+										<TableContainer
+											sx={{
+												boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+												borderRadius: '12px',
+												border: `1px solid ${theme.palette.divider}`
+											}}
+										>
+											<Table>
+												<ModernTableHead>
+													<TableRow>
+														<TableCell>Boatman Name</TableCell>
+														<TableCell align="center">Total Orders</TableCell>
+														<TableCell align="right">Earnings (LKR)</TableCell>
+													</TableRow>
+												</ModernTableHead>
+												<TableBody>
+													{detailedData.boatmen.map((b, i) => (
+														<StyledTableRow key={i}>
+															<TableCell
+																sx={{
+																	fontSize: '1.05rem',
+																	fontWeight: 700,
+																	color: '#334155'
+																}}
+															>
+																{i + 1}. {b.name}
+															</TableCell>
+															<TableCell align="center">
+																<Chip
+																	label={b.orderCount}
+																	color="info"
+																	size="small"
+																	sx={{ fontWeight: 800, minWidth: '40px' }}
+																/>
+															</TableCell>
+															<TableCell
+																align="right"
+																sx={{
+																	fontSize: '1.15rem',
+																	fontWeight: 800,
+																	fontFamily: 'monospace',
+																	color: '#0f172a'
+																}}
+															>
+																{b.totalEarnings.toLocaleString()}
+															</TableCell>
+														</StyledTableRow>
+													))}
+												</TableBody>
+											</Table>
+										</TableContainer>
 									</Grid>
 								</Grid>
 							</Box>
-							<Divider sx={{ my: 2 }} />
-
-							<Grid
-								container
-								spacing={4}
-							>
-								{/* Guides Table */}
-								<Grid
-									item
-									xs={12}
-									md={6}
-								>
-									<Typography
-										variant="h6"
-										component="h3"
-										gutterBottom
-									>
-										Top Performing Guides
-									</Typography>
-									<TableContainer
-										component={Paper}
-										variant="outlined"
-									>
-										<Table
-											size="small"
-											aria-label="guides performance table"
-										>
-											<StyledTableHead>
-												<TableRow>
-													<TableCell>Name</TableCell>
-													<TableCell align="center">Orders</TableCell>
-													<TableCell align="right">Earnings</TableCell>
-												</TableRow>
-											</StyledTableHead>
-											<TableBody>
-												{detailedData.guides.map((guide) => (
-													<TableRow
-														key={guide.name}
-														sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-													>
-														<TableCell
-															component="th"
-															scope="row"
-														>
-															{guide.name}
-														</TableCell>
-														<TableCell align="center">{guide.orderCount}</TableCell>
-														<TableCell align="right">
-															{guide.totalEarnings.toLocaleString('en-US', {
-																style: 'currency',
-																currency: 'LKR',
-																minimumFractionDigits: 0
-															})}
-														</TableCell>
-													</TableRow>
-												))}
-											</TableBody>
-										</Table>
-									</TableContainer>
-								</Grid>
-
-								{/* Boatmen Table */}
-								<Grid
-									item
-									xs={12}
-									md={6}
-								>
-									<Typography
-										variant="h6"
-										component="h3"
-										gutterBottom
-									>
-										Top Performing Boatmen
-									</Typography>
-									<TableContainer
-										component={Paper}
-										variant="outlined"
-									>
-										<Table
-											size="small"
-											aria-label="boatmen performance table"
-										>
-											<StyledTableHead>
-												<TableRow>
-													<TableCell>Name</TableCell>
-													<TableCell align="center">Orders</TableCell>
-													<TableCell align="right">Earnings</TableCell>
-												</TableRow>
-											</StyledTableHead>
-											<TableBody>
-												{detailedData.boatmen.map((boatman) => (
-													<TableRow
-														key={boatman.name}
-														sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-													>
-														<TableCell
-															component="th"
-															scope="row"
-														>
-															{boatman.name}
-														</TableCell>
-														<TableCell align="center">{boatman.orderCount}</TableCell>
-														<TableCell align="right">
-															{boatman.totalEarnings.toLocaleString('en-US', {
-																style: 'currency',
-																currency: 'LKR',
-																minimumFractionDigits: 0
-															})}
-														</TableCell>
-													</TableRow>
-												))}
-											</TableBody>
-										</Table>
-									</TableContainer>
-								</Grid>
-							</Grid>
-						</Paper>
+						</ProCard>
 					</motion.div>
 				)}
 			</Box>
