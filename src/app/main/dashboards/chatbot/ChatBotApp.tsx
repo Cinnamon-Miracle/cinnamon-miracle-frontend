@@ -202,7 +202,7 @@ function ChatBotApp() {
 			type: 'bot',
 			contentType: 'text',
 			content:
-				'Hello! I am your **Cinnamon Miracle AI Advisor**. Ask me about revenue, orders, or system status.',
+				'Hello! I am your **SmartPOS AI Advisor**. Ask me about revenue, orders, or system status.',
 			timestamp: new Date()
 		}
 	]);
@@ -497,7 +497,7 @@ function ChatBotApp() {
 						variant="h5"
 						sx={{ fontWeight: 700, color: '#1e3a8a' }}
 					>
-						Cinnamon Miracle AI
+						SmartPOS AI
 					</Typography>
 					<Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mt: 0.5 }}>
 						<Typography
