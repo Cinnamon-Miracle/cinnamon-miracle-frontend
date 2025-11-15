@@ -241,6 +241,7 @@ function ChatBotApp() {
 		}
 	};
 
+	// content update to test commenting feature
 	const executeQuery = async (queryText: string) => {
 		if (dailyQueryCount >= MAX_QUERIES) {
 			setMessages((prev) => [
