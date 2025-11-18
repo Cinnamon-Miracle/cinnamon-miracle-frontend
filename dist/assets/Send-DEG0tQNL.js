@@ -1,0 +1,1 @@
+import{i as r}from"./interopRequireDefault-BuJbqelY.js";import{r as t}from"./createSvgIcon-DVT4_uAo.js";import{aC as a}from"./index-CUb6G_Bt.js";var e={},o=r;Object.defineProperty(e,"__esModule",{value:!0});var u=e.default=void 0,i=o(t()),d=a;u=e.default=(0,i.default)((0,d.jsx)("path",{d:"M2.01 21 23 12 2.01 3 2 10l15 2-15 2z"}),"Send");export{u as d};

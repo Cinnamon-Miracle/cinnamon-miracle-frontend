@@ -1,0 +1,1 @@
+import{r as t,j as g,aF as n}from"./index-CUb6G_Bt.js";const h=t.forwardRef((e,a)=>{const{code:r,language:o,...s}=e;return g(n,{component:"pre",className:`language-${o||"jsx"}`,ref:a,...s,children:r})});export{h as H};

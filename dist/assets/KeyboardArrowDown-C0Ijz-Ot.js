@@ -1,0 +1,1 @@
+import{i as e}from"./interopRequireDefault-BuJbqelY.js";import{r as a}from"./createSvgIcon-DVT4_uAo.js";import{aC as o}from"./index-CUb6G_Bt.js";var r={},t=e;Object.defineProperty(r,"__esModule",{value:!0});var u=r.default=void 0,i=t(a()),d=o;u=r.default=(0,i.default)((0,d.jsx)("path",{d:"M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6z"}),"KeyboardArrowDown");export{u as d};

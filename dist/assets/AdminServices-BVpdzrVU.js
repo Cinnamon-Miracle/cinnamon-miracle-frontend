@@ -1,0 +1,1 @@
+const s="http://31.97.70.39:3000",a=`${s}/api/admin/v1/roles`,i=`${s}/api/admin/v1/roles`,n=`${s}/api/admin/v1/roles/`,o=`${s}/api/admin/v1/permissions/`,E=`${s}/api/admin/v1/permissions/`;export{a as G,i as S,n as U,E as a,o as b};
