@@ -6,35 +6,61 @@ interface IssuesWidgetProps {
 	value?: number;
 }
 
-// Styled root matching the new design system
 const WidgetRoot = styled(Paper)(({ theme }) => ({
 	position: 'relative',
-	borderRadius: '24px',
-	padding: theme.spacing(3, 4),
+	borderRadius: '22px',
+	padding: theme.spacing(4, 4),
 	display: 'flex',
 	flexDirection: 'column',
-	alignItems: 'center',
+	alignItems: 'flex-start',
 	justifyContent: 'center',
-	textAlign: 'center',
-	minHeight: '180px',
-	boxShadow: '0 8px 24px rgba(0,0,0,0.06)',
-	border: `1px solid ${theme.palette.divider}`,
-	backgroundColor: '#ffffff',
-	transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+	background: '#ffffff',
 	overflow: 'hidden',
-	// YELLOW (warning) accent at the BOTTOM
-	borderBottom: `8px solid ${theme.palette.warning.main}`,
+	boxShadow: '0 20px 45px -12px rgba(0,0,0,0.12)',
+	transition: '0.3s ease',
+
 	'&:hover': {
-		transform: 'translateY(-5px)',
-		boxShadow: '0 16px 32px rgba(0,0,0,0.12)'
+		transform: 'translateY(-4px)',
+		boxShadow: '0 30px 70px -10px rgba(0,0,0,0.18)'
 	}
 }));
 
-const IconWrapper = styled(Box)(({ theme }) => ({
+// BACKGROUND IMAGE
+const BgImage = styled('img')(() => ({
 	position: 'absolute',
-	top: 16,
-	right: 16,
-	opacity: 0.5
+	top: 0,
+	left: 0,
+	width: '100%',
+	height: '100%',
+	objectFit: 'cover',
+	opacity: 0.4,
+	filter: 'blur(0.3px)',
+	pointerEvents: 'none',
+	userSelect: 'none'
+}));
+
+// DARK LAYER
+const DarkLayer = styled(Box)(() => ({
+	position: 'absolute',
+	top: 0,
+	left: 0,
+	width: '100%',
+	height: '100%',
+	background: 'rgba(0,0,0,0.65)',
+	pointerEvents: 'none'
+}));
+
+const MenuDots = styled(Box)(({ theme }) => ({
+	position: 'absolute',
+	top: 12,
+	right: 12,
+	opacity: 0.65,
+	transition: '0.2s ease',
+	zIndex: 3,
+
+	'&:hover': {
+		opacity: 1
+	}
 }));
 
 function IssuesWidget({ value = 0 }: IssuesWidgetProps) {
@@ -42,52 +68,49 @@ function IssuesWidget({ value = 0 }: IssuesWidgetProps) {
 
 	return (
 		<WidgetRoot>
-			<IconWrapper>
+
+			{/* Background Image */}
+			<BgImage
+				src="https://plus.unsplash.com/premium_photo-1679515470684-1f6af2858b67?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8Z3VpZGVzfGVufDB8fDB8fHww"
+				alt="guide-bg"
+			/>
+
+			{/* Dark Overlay */}
+			<DarkLayer />
+
+			{/* Menu Dots */}
+			<MenuDots>
 				<IconButton size="small">
-					<FuseSvgIcon
-						size={20}
-						color="action"
-					>
+					<FuseSvgIcon size={22} color="action">
 						heroicons-outline:dots-vertical
 					</FuseSvgIcon>
 				</IconButton>
-			</IconWrapper>
+			</MenuDots>
 
-			{/* Yellow Visual Anchor Icon */}
-			<Box
-				sx={{
-					mb: 2,
-					p: 1.5,
-					borderRadius: '50%',
-					bgcolor: alpha(theme.palette.warning.main, 0.1),
-					color: theme.palette.warning.main,
-					display: 'flex',
-					alignItems: 'center',
-					justifyContent: 'center'
-				}}
-			>
-				<FuseSvgIcon size={32}>heroicons-outline:currency-dollar</FuseSvgIcon>
-			</Box>
-
+			{/* Title */}
 			<Typography
 				sx={{
-					fontSize: '1.1rem',
-					fontWeight: 800,
-					textTransform: 'uppercase',
-					letterSpacing: '0.05em',
-					color: 'text.secondary',
-					mb: 1
+					fontSize: '1.45rem',
+					fontWeight: 700,
+					letterSpacing: '0.01em',
+					color: '#fff',     // pure white
+					mb: 1,
+					position: 'relative',
+					zIndex: 2
 				}}
 			>
 				Total Guide Amount
 			</Typography>
 
+			{/* Big Number (Pure White) */}
 			<Typography
 				sx={{
-					fontSize: '2.8rem', // Large for readability
+					fontSize: '4.2rem',
 					fontWeight: 900,
-					lineHeight: 1,
-					color: theme.palette.warning.dark, // Dark yellow/amber for contrast
+					lineHeight: 1.1,
+					color: '#fff',     // PURE WHITE
+					position: 'relative',
+					zIndex: 2,
 					fontVariantNumeric: 'tabular-nums'
 				}}
 			>
@@ -97,6 +120,7 @@ function IssuesWidget({ value = 0 }: IssuesWidgetProps) {
 					maximumFractionDigits: 0
 				})}
 			</Typography>
+
 		</WidgetRoot>
 	);
 }

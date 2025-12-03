@@ -24,6 +24,7 @@ export type FuseNavItemType = {
 	badge?: FuseNavBadgeType;
 	children?: FuseNavItemType[];
 	hasPermission?: boolean;
+	requiresSubscription?: boolean;
 };
 
 export type FuseFlatNavItemType = Omit<FuseNavItemType, 'children' | 'sx'> & { children?: string[]; order: string };

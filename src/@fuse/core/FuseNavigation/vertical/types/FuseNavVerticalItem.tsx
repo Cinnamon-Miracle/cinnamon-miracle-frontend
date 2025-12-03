@@ -7,6 +7,7 @@ import { ListItemButton, ListItemButtonProps } from '@mui/material';
 import FuseNavBadge from '../../FuseNavBadge';
 import FuseSvgIcon from '../../../FuseSvgIcon';
 import { FuseNavItemComponentProps } from '../../FuseNavItem';
+import { useSubscription } from 'app/contexts/SubscriptionContext';
 
 type ListItemButtonStyleProps = ListItemButtonProps & {
 	itempadding: number;
@@ -52,14 +53,20 @@ const Root = styled(ListItemButton)<ListItemButtonStyleProps>(({ theme, ...props
  */
 function FuseNavVerticalItem(props: FuseNavItemComponentProps) {
 	const { item, nestedLevel = 0, onItemClick, checkPermission } = props;
+	const { checkNavigationAccess, showSubscriptionDialog } = useSubscription();
 
 	const itempadding = nestedLevel > 0 ? 38 + nestedLevel * 16 : 16;
 
-	const component = item.url ? NavLinkAdapter : 'li';
+	// Check if item is restricted by subscription
+	const isRestricted = item.requiresSubscription && !checkNavigationAccess(item.id);
+
+	// If item is restricted, use 'li' instead of NavLinkAdapter to prevent navigation
+	const component = isRestricted ? 'li' : (item.url ? NavLinkAdapter : 'li');
 
 	let itemProps = {};
 
-	if (typeof component !== 'string') {
+	// Only add navigation props if not restricted
+	if (typeof component !== 'string' && !isRestricted) {
 		itemProps = {
 			disabled: item.disabled,
 			to: item.url || '',
@@ -72,12 +79,31 @@ function FuseNavVerticalItem(props: FuseNavItemComponentProps) {
 		return null;
 	}
 
+	/**
+	 * Handle navigation item click
+	 * Check if item requires subscription and user has access
+	 */
+	const handleClick = (event: React.MouseEvent) => {
+		// Check if item requires subscription
+		if (item.requiresSubscription && !checkNavigationAccess(item.id)) {
+			event.preventDefault();
+			event.stopPropagation();
+			showSubscriptionDialog();
+			return;
+		}
+
+		// Call original onItemClick if provided
+		if (onItemClick) {
+			onItemClick(item);
+		}
+	};
+
 	return useMemo(
 		() => (
 			<Root
 				component={component}
 				className={clsx('fuse-list-item', item.active && 'active')}
-				onClick={() => onItemClick && onItemClick(item)}
+				onClick={handleClick}
 				itempadding={itempadding}
 				sx={item.sx}
 				{...itemProps}
@@ -103,7 +129,7 @@ function FuseNavVerticalItem(props: FuseNavItemComponentProps) {
 				{item.badge && <FuseNavBadge badge={item.badge} />}
 			</Root>
 		),
-		[item, itempadding, onItemClick]
+		[item, itempadding, handleClick, component, isRestricted]
 	);
 }
 

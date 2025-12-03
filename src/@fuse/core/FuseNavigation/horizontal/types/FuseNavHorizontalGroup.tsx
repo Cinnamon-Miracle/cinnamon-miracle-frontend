@@ -16,6 +16,7 @@ import { WithRouterProps } from '@fuse/core/withRouter/withRouter';
 import * as PopperJS from '@popperjs/core';
 import FuseNavItem, { FuseNavItemComponentProps } from '../../FuseNavItem';
 import FuseSvgIcon from '../../../FuseSvgIcon';
+import { useSubscription } from 'app/contexts/SubscriptionContext';
 
 const Root = styled(ListItemButton)<ListItemButtonProps>(({ theme }) => ({
 	color: theme.palette.text.primary,
@@ -53,8 +54,14 @@ function FuseNavHorizontalGroup(props: FuseNavHorizontalGroupProps) {
 	const [opened, setOpened] = useState(false);
 	const { item, nestedLevel, dense, location, checkPermission } = props;
 	const theme = useTheme();
+	const { checkNavigationAccess, showSubscriptionDialog } = useSubscription();
 
 	const handleToggle = useDebounce((open: boolean) => {
+		// Check if item requires subscription
+		if (open && item.requiresSubscription && !checkNavigationAccess(item.id)) {
+			showSubscriptionDialog();
+			return;
+		}
 		setOpened(open);
 	}, 150);
 
@@ -69,9 +76,15 @@ function FuseNavHorizontalGroup(props: FuseNavHorizontalGroupProps) {
 
 		const component = item.url ? NavLinkAdapter : 'li';
 
+		// Check if item is restricted by subscription
+		const isRestricted = item.requiresSubscription && !checkNavigationAccess(item.id);
+
+		// If item is restricted, use 'li' instead of NavLinkAdapter
+		const componentToUse = isRestricted ? 'li' : component;
+
 		let itemProps;
 
-		if (typeof component !== 'string') {
+		if (typeof componentToUse !== 'string' && !isRestricted) {
 			itemProps = {
 				disabled: item.disabled,
 				to: item.url,
@@ -90,7 +103,7 @@ function FuseNavHorizontalGroup(props: FuseNavHorizontalGroupProps) {
 					{({ ref }) => (
 						<div ref={ref}>
 							<Root
-								component={component}
+								component={componentToUse}
 								className={clsx(
 									'fuse-list-item',
 									'relative',
@@ -188,7 +201,7 @@ function FuseNavHorizontalGroup(props: FuseNavHorizontalGroupProps) {
 				)}
 			</Manager>
 		);
-	}, [dense, handleToggle, item, nestedLevel, opened, props.location.pathname, theme.direction]);
+	}, [dense, handleToggle, item, nestedLevel, opened, props.location.pathname, theme.direction, checkNavigationAccess]);
 }
 
 const NavHorizontalGroup = withRouter(memo(FuseNavHorizontalGroup));

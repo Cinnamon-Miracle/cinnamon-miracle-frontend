@@ -16,6 +16,7 @@ import isUrlInChildren from '@fuse/core/FuseNavigation/isUrlInChildren';
 import FuseNavBadge from '../../FuseNavBadge';
 import FuseNavItem, { FuseNavItemComponentProps } from '../../FuseNavItem';
 import FuseSvgIcon from '../../../FuseSvgIcon';
+import { useSubscription } from 'app/contexts/SubscriptionContext';
 
 const Root = styled(ListItemButton)<ListItemButtonProps>(({ theme }) => ({
 	color: theme.palette.text.primary,
@@ -51,16 +52,27 @@ function FuseNavHorizontalCollapse(props: FuseNavHorizontalCollapseProps) {
 	const [opened, setOpened] = useState(false);
 	const { item, nestedLevel, dense, location, checkPermission } = props;
 	const theme = useTheme();
+	const { checkNavigationAccess, showSubscriptionDialog } = useSubscription();
 
 	const handleToggle = useDebounce((open: boolean) => {
+		// Check if item requires subscription
+		if (open && item.requiresSubscription && !checkNavigationAccess(item.id)) {
+			showSubscriptionDialog();
+			return;
+		}
 		setOpened(open);
 	}, 150);
 
-	const component = item.url ? NavLinkAdapter : 'li';
+	// Check if item is restricted by subscription
+	const isRestricted = item.requiresSubscription && !checkNavigationAccess(item.id);
+
+	// If item is restricted, use 'li' instead of NavLinkAdapter
+	const component = isRestricted ? 'li' : (item.url ? NavLinkAdapter : 'li');
 
 	let itemProps;
 
-	if (typeof component !== 'string') {
+	// Only add navigation props if not restricted
+	if (typeof component !== 'string' && !isRestricted) {
 		itemProps = {
 			disabled: item.disabled,
 			to: item.url,

@@ -151,7 +151,7 @@ function ProductManagementBaseComponent() {
 			render: (rowData: Product) => `LKR ${rowData.price.toFixed(2)}`
 		},
 		{
-			title: t('Active'),
+			title: t('Status'),
 			field: 'isActive',
 			cellStyle: { padding: '6px 8px' },
 			render: (rowData: Product) => {

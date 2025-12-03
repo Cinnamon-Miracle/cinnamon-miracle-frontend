@@ -6,35 +6,60 @@ interface OverdueWidgetProps {
 	value?: number;
 }
 
-// Styled root matching the new design system
 const WidgetRoot = styled(Paper)(({ theme }) => ({
 	position: 'relative',
-	borderRadius: '24px',
-	padding: theme.spacing(3, 4),
+	borderRadius: '22px',
+	padding: theme.spacing(4, 4),
 	display: 'flex',
 	flexDirection: 'column',
-	alignItems: 'center',
+	alignItems: 'flex-start',
 	justifyContent: 'center',
-	textAlign: 'center',
-	minHeight: '180px',
-	boxShadow: '0 8px 24px rgba(0,0,0,0.06)',
-	border: `1px solid ${theme.palette.divider}`,
-	backgroundColor: '#ffffff',
-	transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+	background: '#ffffff',
 	overflow: 'hidden',
-	// RED accent at the BOTTOM
-	borderBottom: `8px solid ${theme.palette.error.main}`,
+	boxShadow: '0 22px 48px -12px rgba(0,0,0,0.12)',
+	transition: '0.3s ease',
+
 	'&:hover': {
-		transform: 'translateY(-5px)',
-		boxShadow: '0 16px 32px rgba(0,0,0,0.12)'
+		transform: 'translateY(-4px)',
+		boxShadow: '0 32px 70px -10px rgba(0,0,0,0.18)'
 	}
+}));
+
+// Background image (stronger & sharp)
+const BgImage = styled('img')(() => ({
+	position: 'absolute',
+	top: 0,
+	right: 0,
+	width: '100%',
+	height: '100%',
+	objectFit: 'cover',
+	opacity: 0.4,              // more visible
+	filter: 'blur(0.3px)',     // very small blur
+	pointerEvents: 'none',
+	userSelect: 'none'
+}));
+
+// Strong dark overlay so text is fully clear
+const DarkLayer = styled(Box)(() => ({
+	position: 'absolute',
+	top: 0,
+	left: 0,
+	width: '100%',
+	height: '100%',
+	background: 'rgba(0,0,0,0.65)',  // strong dark layer
+	pointerEvents: 'none'
 }));
 
 const IconWrapper = styled(Box)(({ theme }) => ({
 	position: 'absolute',
-	top: 16,
-	right: 16,
-	opacity: 0.5
+	top: 12,
+	right: 12,
+	opacity: 0.7,
+	transition: '0.2s ease',
+
+	'&:hover': {
+		opacity: 1
+	}
 }));
 
 function OverdueWidget({ value = 0 }: OverdueWidgetProps) {
@@ -42,52 +67,49 @@ function OverdueWidget({ value = 0 }: OverdueWidgetProps) {
 
 	return (
 		<WidgetRoot>
+
+			{/* Background Image */}
+			<BgImage
+				src="https://plus.unsplash.com/premium_photo-1663051078919-600b09742917?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Ym9hdG1hbnxlbnwwfHwwfHx8MA%3D%3D"
+				alt="boatman"
+			/>
+
+			{/* Dark Overlay */}
+			<DarkLayer />
+
+			{/* Dots Menu */}
 			<IconWrapper>
 				<IconButton size="small">
-					<FuseSvgIcon
-						size={20}
-						color="action"
-					>
+					<FuseSvgIcon size={22} color="action">
 						heroicons-outline:dots-vertical
 					</FuseSvgIcon>
 				</IconButton>
 			</IconWrapper>
 
-			{/* Red Visual Anchor Icon */}
-			<Box
-				sx={{
-					mb: 2,
-					p: 1.5,
-					borderRadius: '50%',
-					bgcolor: alpha(theme.palette.error.main, 0.1),
-					color: theme.palette.error.main,
-					display: 'flex',
-					alignItems: 'center',
-					justifyContent: 'center'
-				}}
-			>
-				<FuseSvgIcon size={32}>heroicons-outline:currency-dollar</FuseSvgIcon>
-			</Box>
-
+			{/* Title (100% clear) */}
 			<Typography
 				sx={{
-					fontSize: '1.1rem',
-					fontWeight: 800,
-					textTransform: 'uppercase',
-					letterSpacing: '0.05em',
-					color: 'text.secondary',
-					mb: 1
+					fontSize: '1.45rem',
+					fontWeight: 700,
+					letterSpacing: '0.01em',
+					color: '#fff',            // FULL CLEAR WHITE
+					mb: 1,
+					position: 'relative',
+					zIndex: 2
 				}}
 			>
 				Total Boatman Cost
 			</Typography>
 
+			{/* Big Value (100% clear) */}
 			<Typography
 				sx={{
-					fontSize: '2.8rem', // Large for readability
+					fontSize: '4.5rem',
 					fontWeight: 900,
-					lineHeight: 1,
-					color: theme.palette.error.dark, // Dark red for good contrast
+					lineHeight: 1.1,
+					color: '#fff',            // PURE WHITE
+					position: 'relative',
+					zIndex: 2,
 					fontVariantNumeric: 'tabular-nums'
 				}}
 			>
@@ -97,6 +119,7 @@ function OverdueWidget({ value = 0 }: OverdueWidgetProps) {
 					maximumFractionDigits: 0
 				})}
 			</Typography>
+
 		</WidgetRoot>
 	);
 }

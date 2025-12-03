@@ -14,6 +14,7 @@ import FuseNavBadge from '../../FuseNavBadge';
 import FuseNavItem, { FuseNavItemComponentProps } from '../../FuseNavItem';
 import FuseSvgIcon from '../../../FuseSvgIcon';
 import { FuseNavItemType } from '../../types/FuseNavItemType';
+import { useSubscription } from 'app/contexts/SubscriptionContext';
 
 type ListComponentProps = ListProps & {
 	itempadding: number;
@@ -52,6 +53,7 @@ function needsToBeOpened(location: Location, item: FuseNavItemType) {
 function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
 	const location = useLocation();
 	const { item, nestedLevel = 0, onItemClick, checkPermission } = props;
+	const { checkNavigationAccess, showSubscriptionDialog } = useSubscription();
 
 	const [open, setOpen] = useState(() => needsToBeOpened(location, item));
 
@@ -65,11 +67,16 @@ function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
 		}
 	}, [location, item]);
 
-	const component = item.url ? NavLinkAdapter : 'li';
+	// Check if item is restricted by subscription
+	const isRestricted = item.requiresSubscription && !checkNavigationAccess(item.id);
+
+	// If item is restricted, use 'li' instead of NavLinkAdapter
+	const component = isRestricted ? 'li' : (item.url ? NavLinkAdapter : 'li');
 
 	let itemProps = {};
 
-	if (typeof component !== 'string') {
+	// Only add navigation props if not restricted
+	if (typeof component !== 'string' && !isRestricted) {
 		itemProps = {
 			disabled: item.disabled,
 			to: item.url,
@@ -92,7 +99,14 @@ function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
 				<ListItemButton
 					component={component}
 					className="fuse-list-item"
-					onClick={() => {
+					onClick={(ev) => {
+						// Check if item requires subscription
+						if (item.requiresSubscription && !checkNavigationAccess(item.id)) {
+							ev.preventDefault();
+							ev.stopPropagation();
+							showSubscriptionDialog();
+							return;
+						}
 						setOpen(!open);
 					}}
 					{...itemProps}

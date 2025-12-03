@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { useMemo } from 'react';
 import { ListItem, ListItemButtonProps, ListItemText } from '@mui/material';
 import FuseNavItem, { FuseNavItemComponentProps } from '../../FuseNavItem';
+import { useSubscription } from 'app/contexts/SubscriptionContext';
 
 type ListItemButtonComponentProps = ListItemButtonProps & {
 	itempadding: number;
@@ -28,14 +29,20 @@ const Root = styled(ListItem)<ListItemButtonComponentProps>(({ theme, ...props }
  */
 function FuseNavVerticalGroup(props: FuseNavItemComponentProps) {
 	const { item, nestedLevel = 0, onItemClick, checkPermission } = props;
+	const { checkNavigationAccess, showSubscriptionDialog } = useSubscription();
 
 	const itempadding = nestedLevel > 0 ? 38 + nestedLevel * 16 : 16;
 
-	const component = item.url ? NavLinkAdapter : 'li';
+	// Check if item is restricted by subscription
+	const isRestricted = item.requiresSubscription && !checkNavigationAccess(item.id);
+
+	// If item is restricted, use 'li' instead of NavLinkAdapter
+	const component = isRestricted ? 'li' : (item.url ? NavLinkAdapter : 'li');
 
 	let itemProps = {};
 
-	if (typeof component !== 'string') {
+	// Only add navigation props if not restricted
+	if (typeof component !== 'string' && !isRestricted) {
 		itemProps = {
 			disabled: item.disabled,
 			to: item.url,
@@ -48,6 +55,24 @@ function FuseNavVerticalGroup(props: FuseNavItemComponentProps) {
 		return null;
 	}
 
+	/**
+	 * Handle group item click
+	 */
+	const handleClick = (event: React.MouseEvent) => {
+		// Check if item requires subscription
+		if (item.requiresSubscription && !checkNavigationAccess(item.id)) {
+			event.preventDefault();
+			event.stopPropagation();
+			showSubscriptionDialog();
+			return;
+		}
+
+		// Call original onItemClick if provided
+		if (onItemClick) {
+			onItemClick(item);
+		}
+	};
+
 	return useMemo(
 		() => (
 			<>
@@ -58,7 +83,7 @@ function FuseNavVerticalGroup(props: FuseNavItemComponentProps) {
 						'fuse-list-subheader flex items-center  py-[5px] mt-0',
 						!item.url ? 'cursor-default' : ''
 					)}
-					onClick={() => onItemClick && onItemClick(item)}
+					onClick={handleClick}
 					sx={item.sx}
 					{...itemProps}
 				>

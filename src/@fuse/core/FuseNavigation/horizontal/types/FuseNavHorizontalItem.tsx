@@ -9,6 +9,7 @@ import { WithRouterProps } from '@fuse/core/withRouter/withRouter';
 import FuseNavBadge from '../../FuseNavBadge';
 import FuseSvgIcon from '../../../FuseSvgIcon';
 import { FuseNavItemComponentProps } from '../../FuseNavItem';
+import { useSubscription } from 'app/contexts/SubscriptionContext';
 
 const Root = styled(ListItemButton)<ListItemButtonProps>(({ theme }) => ({
 	color: theme.palette.text.primary,
@@ -38,12 +39,18 @@ type FuseNavHorizontalItemProps = FuseNavItemComponentProps & WithRouterProps;
  */
 function FuseNavHorizontalItem(props: FuseNavHorizontalItemProps) {
 	const { item, checkPermission } = props;
+	const { checkNavigationAccess, showSubscriptionDialog } = useSubscription();
 
-	const component = item.url ? NavLinkAdapter : 'li';
+	// Check if item is restricted by subscription
+	const isRestricted = item.requiresSubscription && !checkNavigationAccess(item.id);
+
+	// If item is restricted, use 'li' instead of NavLinkAdapter to prevent navigation
+	const component = isRestricted ? 'li' : (item.url ? NavLinkAdapter : 'li');
 
 	let itemProps;
 
-	if (typeof component !== 'string') {
+	// Only add navigation props if not restricted
+	if (typeof component !== 'string' && !isRestricted) {
 		itemProps = {
 			disabled: item.disabled,
 			to: item.url || '',
@@ -56,11 +63,26 @@ function FuseNavHorizontalItem(props: FuseNavHorizontalItemProps) {
 		return null;
 	}
 
+	/**
+	 * Handle navigation item click
+	 * Check if item requires subscription and user has access
+	 */
+	const handleClick = (event: React.MouseEvent) => {
+		// Check if item requires subscription
+		if (item.requiresSubscription && !checkNavigationAccess(item.id)) {
+			event.preventDefault();
+			event.stopPropagation();
+			showSubscriptionDialog();
+			return;
+		}
+	};
+
 	return useMemo(
 		() => (
 			<Root
 				component={component}
 				className={clsx('fuse-list-item', item.active && 'active')}
+				onClick={handleClick}
 				sx={item.sx}
 				{...itemProps}
 			>
@@ -87,7 +109,7 @@ function FuseNavHorizontalItem(props: FuseNavHorizontalItemProps) {
 				)}
 			</Root>
 		),
-		[item.badge, item.exact, item.icon, item.iconClass, item.title, item.url]
+		[item.badge, item.exact, item.icon, item.iconClass, item.title, item.url, component, isRestricted, handleClick]
 	);
 }
 

@@ -4,7 +4,29 @@ const locale = {
 	USERS: 'Users',
 	LATEST_NEWS: 'Latest News',
 	SALES_MANAGEMENT: 'Sales Management',
-	PROPERTY_MANAGEMENT: 'Property Management'
+	PROPERTY_MANAGEMENT: 'Property Management',
+	FINANCE: 'Finance',
+	BANKING: 'Banking',
+	HR: 'HR',
+	CRM: 'CRM',
+	PROCUREMENT: 'Procurement',
+	WAREHOUSE: 'Warehouse',
+	MANUFACTURING: 'Manufacturing',
+	ASSETS: 'Assets',
+	PROJECTS: 'Projects',
+	REPORTS: 'Reports',
+	DOCUMENTS: 'Documents',
+	COMMUNICATION: 'Communication',
+	QUALITY: 'Quality',
+	INTEGRATIONS: 'Integration',
+	BILLING: 'Billing',
+	AI: 'AI',
+	SECURITY: 'Security',
+	SYSTEM: 'System',
+	PORTALS: 'Portals',
+	HELP: 'Help',
+	DATA: 'Data',
+	LEGALS: 'Legals'
 };
 
 export default locale;

@@ -7,6 +7,8 @@ import { Provider } from 'react-redux';
 import ErrorBoundary from '@fuse/utils/ErrorBoundary';
 import AppContext from './AppContext';
 import store from './store/store';
+import { SubscriptionProvider } from './contexts/SubscriptionContext';
+
 
 type ComponentProps = {
 	name?: string;
@@ -36,7 +38,10 @@ function withAppProviders(Component: React.ComponentType<ComponentProps>) {
 					<LocalizationProvider dateAdapter={AdapterDateFns}>
 						<Provider store={store}>
 							<StyledEngineProvider injectFirst>
-								<Component {...props} />
+								<SubscriptionProvider>
+									<Component {...props} />
+
+								</SubscriptionProvider>
 							</StyledEngineProvider>
 						</Provider>
 					</LocalizationProvider>
