@@ -26,7 +26,7 @@ function Logo() {
 				className="logo-icon h-32 "
 				variant="h6"
 			>
-				SmartPOS AI
+				B2BIZ
 			</Typography>
 			{/* <img
 				className="logo-icon h-32 w-32"

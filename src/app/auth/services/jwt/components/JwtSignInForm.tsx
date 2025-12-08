@@ -12,9 +12,12 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import ClassicForgotPasswordPage from 'src/app/main/pages/authentication/forgot-password/ClassicForgotPasswordPage';
-import { Link } from 'react-router-dom';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import Checkbox from '@mui/material/Checkbox';
 import useJwtAuth from '../useJwtAuth';
 
+// ts-ignore
 /**
  * Form Validation Schema
  */
@@ -37,7 +40,6 @@ const defaultValues = {
 
 function JwtSignInForm() {
 	const { signIn } = useJwtAuth();
-
 
 	const { control, formState, handleSubmit, setValue, setError } = useForm<FormType>({
 		mode: 'onChange',
@@ -108,6 +110,7 @@ function JwtSignInForm() {
 		);
 	}
 
+	// @ts-ignore
 	return (
 		<div>
 			<form
@@ -167,7 +170,7 @@ function JwtSignInForm() {
 				/>
 
 				<div className="flex flex-col items-center justify-center sm:flex-row sm:justify-between">
-					{/* <Controller
+					<Controller
 						name="remember"
 						control={control}
 						render={({ field }) => (
@@ -183,29 +186,21 @@ function JwtSignInForm() {
 								/>
 							</FormControl>
 						)}
-					/> */}
+					/>
 
-					{/*<Link*/}
-					{/*	className="text-md font-medium"*/}
-					{/*	to=""*/}
-					{/*	// to="/forgot-password"*/}
-					{/*>*/}
-					{/*	Forgot password?*/}
-					{/*</Link>*/}
-
-					{/* <Button
-						className="text-md font-medium hover:bg-transparent active:bg-transparent focus:bg-transparent"
-						// to="/pages/auth/forgot-password"
-						to="/forgot-password"
-						// onClick={handleOpen}
-					>
-						Forgot password?
-					</Button> */}
+					{/* <Button */}
+					{/*	className="text-md font-medium hover:bg-transparent active:bg-transparent focus:bg-transparent" */}
+					{/*	to="/pages/auth/forgot-password" */}
+					{/*	to="/forgot-password" */}
+					{/*	onClick={handleOpen} */}
+					{/* > */}
+					{/*	Forgot password? */}
+					{/* </Button> */}
 				</div>
 
 				<Button
 					variant="contained"
-					className="w-full text-white text-lg mt-16 rounded-[6px] bg-yellow-800 hover:bg-yellow-700"
+					className="w-full text-white text-lg mt-16 rounded-[6px] bg-blue-gray-800 hover:bg-blue-gray-700"
 					aria-label="Sign in"
 					disabled={_.isEmpty(dirtyFields) || !isValid}
 					type="submit"

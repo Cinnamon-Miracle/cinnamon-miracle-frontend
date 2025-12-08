@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import JwtLoginTab from './tabs/JwtSignInTab';
 import FirebaseSignInTab from './tabs/FirebaseSignInTab';
 import AwsSignInTab from './tabs/AwsSignInTab';
-import image from '../../assets/medium-shot-woman-celebrating-new-year-s-eve.jpg';
+import image from '../../assets/Flux_Schnell_a_surreal_and_vibrant_cinematic_photo_of_Create_a_0.jpg';
 
 const tabs = [
 	{
@@ -79,10 +79,31 @@ function SignInPage() {
 						backgroundImage: `url(${image})`,
 						backgroundSize: 'cover',
 						backgroundPosition: 'center',
-						filter: 'brightness(0.85)',
-						minWidth: '70%' // Increase width ONLY
+						filter: 'brightness(0.85)'
 					}}
-				/>
+				>
+					{/* Bottom-left quote overlay */}
+					<Box
+						sx={{
+							position: 'absolute',
+							top: 400,
+							backgroundColor: 'rgba(0, 0, 0, 0.55)',
+							padding: '16px 20px',
+							borderRadius: '12px'
+						}}
+					>
+						<Typography
+							variant="h6"
+							sx={{
+								color: '#fff',
+								fontWeight: 300,
+								lineHeight: 1.4
+							}}
+						>
+							Take your business to the next level with B2BIZ Cloud ERP.
+						</Typography>
+					</Box>
+				</Box>
 			</Paper>
 		</div>
 	);
