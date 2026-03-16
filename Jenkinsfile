@@ -1,1 +1,95 @@
-pipeline { agent any environment { DEPLOY_DIR = "/var/www/cinnamon-miracle-frontend" APP_NAME = "cinnamon-frontend" PORT = "3001" } stages { stage('Checkout Code') { steps { checkout scm } } stage('Install Dependencies') { steps { sh ''' # Try every known possible npm location NPM_BIN="" for candidate in \ /usr/local/bin/npm \ /usr/bin/npm \ /usr/local/nvm/versions/node/*/bin/npm \ /opt/nvm/versions/node/*/bin/npm \ /root/.nvm/versions/node/*/bin/npm \ /home/ubuntu/.nvm/versions/node/*/bin/npm \ /home/jenkins/.nvm/versions/node/*/bin/npm \ /var/lib/jenkins/.nvm/versions/node/*/bin/npm \ /opt/node/bin/npm \ /opt/nodejs/bin/npm \ /usr/local/nodejs/bin/npm \ /snap/bin/npm do if [ -x "$candidate" ]; then NPM_BIN="$candidate" echo "Found npm at: $NPM_BIN" break fi done if [ -z "$NPM_BIN" ]; then echo "ERROR: npm not found in any known location" echo "Searching entire filesystem..." find / -name "npm" -type f -executable 2>/dev/null | head -5 exit 1 fi $NPM_BIN install ''' } } stage('Build React App') { steps { sh ''' NPM_BIN="" for candidate in \ /usr/local/bin/npm \ /usr/bin/npm \ /usr/local/nvm/versions/node/*/bin/npm \ /opt/nvm/versions/node/*/bin/npm \ /root/.nvm/versions/node/*/bin/npm \ /home/ubuntu/.nvm/versions/node/*/bin/npm \ /home/jenkins/.nvm/versions/node/*/bin/npm \ /var/lib/jenkins/.nvm/versions/node/*/bin/npm \ /opt/node/bin/npm \ /opt/nodejs/bin/npm \ /usr/local/nodejs/bin/npm \ /snap/bin/npm do if [ -x "$candidate" ]; then NPM_BIN="$candidate" break fi done if [ -z "$NPM_BIN" ]; then echo "ERROR: npm not found" exit 1 fi $NPM_BIN run build ''' } } stage('Deploy Build') { steps { sh ''' mkdir -p $DEPLOY_DIR rm -rf $DEPLOY_DIR/dist cp -r dist $DEPLOY_DIR/ ''' } } stage('Start Application (PM2)') { steps { sh ''' PM2_BIN="" for candidate in \ /usr/local/bin/pm2 \ /usr/bin/pm2 \ /usr/local/nvm/versions/node/*/bin/pm2 \ /opt/nvm/versions/node/*/bin/pm2 \ /root/.nvm/versions/node/*/bin/pm2 \ /home/ubuntu/.nvm/versions/node/*/bin/pm2 \ /home/jenkins/.nvm/versions/node/*/bin/pm2 \ /var/lib/jenkins/.nvm/versions/node/*/bin/pm2 \ /opt/node/bin/pm2 \ /snap/bin/pm2 do if [ -x "$candidate" ]; then PM2_BIN="$candidate" echo "Found pm2 at: $PM2_BIN" break fi done if [ -z "$PM2_BIN" ]; then echo "ERROR: pm2 not found" exit 1 fi $PM2_BIN delete $APP_NAME || true $PM2_BIN start "serve -s $DEPLOY_DIR/dist -l $PORT" --name $APP_NAME $PM2_BIN save ''' } } } post { success { echo "Frontend running on port 3001 via PM2" } failure { echo "Deployment failed" } } }
+pipeline {
+    agent any
+    environment {
+        DEPLOY_DIR = "/var/www/cinnamon-miracle-frontend"
+        APP_NAME = "cinnamon-frontend"
+        PORT = "3001"
+    }
+    stages {
+        stage('Checkout Code') {
+            steps {
+                checkout scm
+            }
+        }
+        stage('Install Dependencies') {
+            steps {
+                sh '''
+                    export NVM_DIR="/var/lib/jenkins/.nvm"
+                    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+                    
+                    # Fallback: try root or ubuntu user nvm if jenkins nvm not found
+                    if ! command -v npm &> /dev/null; then
+                        export NVM_DIR="/root/.nvm"
+                        [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+                    fi
+                    
+                    if ! command -v npm &> /dev/null; then
+                        export NVM_DIR="/home/ubuntu/.nvm"
+                        [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+                    fi
+                    
+                    npm install
+                '''
+            }
+        }
+        stage('Build React App') {
+            steps {
+                sh '''
+                    export NVM_DIR="/var/lib/jenkins/.nvm"
+                    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+                    
+                    if ! command -v npm &> /dev/null; then
+                        export NVM_DIR="/root/.nvm"
+                        [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+                    fi
+                    
+                    if ! command -v npm &> /dev/null; then
+                        export NVM_DIR="/home/ubuntu/.nvm"
+                        [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+                    fi
+                    
+                    npm run build
+                '''
+            }
+        }
+        stage('Deploy Build') {
+            steps {
+                sh '''
+                    mkdir -p $DEPLOY_DIR
+                    rm -rf $DEPLOY_DIR/dist
+                    cp -r dist $DEPLOY_DIR/
+                '''
+            }
+        }
+        stage('Start Application (PM2)') {
+            steps {
+                sh '''
+                    export NVM_DIR="/var/lib/jenkins/.nvm"
+                    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+                    
+                    if ! command -v npm &> /dev/null; then
+                        export NVM_DIR="/root/.nvm"
+                        [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+                    fi
+                    
+                    if ! command -v npm &> /dev/null; then
+                        export NVM_DIR="/home/ubuntu/.nvm"
+                        [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+                    fi
+                    
+                    pm2 delete $APP_NAME || true
+                    pm2 start "serve -s $DEPLOY_DIR/dist -l $PORT" --name $APP_NAME
+                    pm2 save
+                '''
+            }
+        }
+    }
+    post {
+        success {
+            echo "Frontend running on port 3001 via PM2"
+        }
+        failure {
+            echo "Deployment failed"
+        }
+    }
+}
