@@ -54,7 +54,7 @@ function TypingIndicator() {
 				color="#1e3a8a"
 				sx={{ ml: 1, fontSize: '1rem', fontWeight: 500 }}
 			>
-				AI is thinking...
+				AI is thinking.....
 			</Typography>
 		</Box>
 	);
