@@ -5,129 +5,82 @@ pipeline {
         APP_NAME = "cinnamon-frontend"
         PORT = "3001"
     }
+
     stages {
+
         stage('Checkout Code') {
             steps {
                 checkout scm
             }
         }
+
+        stage('Fix Node Permissions') {
+            steps {
+                sh '''
+                    echo "Fixing Node & NPM permissions..."
+
+                    if [ -f /usr/bin/npm ]; then
+                        chmod +x /usr/bin/npm || true
+                    fi
+
+                    if [ -f /usr/bin/node ]; then
+                        chmod +x /usr/bin/node || true
+                    fi
+
+                    if [ -f /usr/local/bin/npm ]; then
+                        chmod +x /usr/local/bin/npm || true
+                    fi
+
+                    if [ -f /usr/local/bin/node ]; then
+                        chmod +x /usr/local/bin/node || true
+                    fi
+
+                    echo "Permissions fixed"
+                '''
+            }
+        }
+
         stage('Install Dependencies') {
             steps {
                 sh '''
-                    # Try every known possible npm location
-                    NPM_BIN=""
-
-                    for candidate in \
-                        /usr/local/bin/npm \
-                        /usr/bin/npm \
-                        /usr/local/nvm/versions/node/*/bin/npm \
-                        /opt/nvm/versions/node/*/bin/npm \
-                        /root/.nvm/versions/node/*/bin/npm \
-                        /home/ubuntu/.nvm/versions/node/*/bin/npm \
-                        /home/jenkins/.nvm/versions/node/*/bin/npm \
-                        /var/lib/jenkins/.nvm/versions/node/*/bin/npm \
-                        /opt/node/bin/npm \
-                        /opt/nodejs/bin/npm \
-                        /usr/local/nodejs/bin/npm \
-                        /snap/bin/npm
-                    do
-                        if [ -x "$candidate" ]; then
-                            NPM_BIN="$candidate"
-                            echo "Found npm at: $NPM_BIN"
-                            break
-                        fi
-                    done
-
-                    if [ -z "$NPM_BIN" ]; then
-                        echo "ERROR: npm not found in any known location"
-                        echo "Searching entire filesystem..."
-                        find / -name "npm" -type f -executable 2>/dev/null | head -5
-                        exit 1
-                    fi
-
-                    $NPM_BIN install
+                    echo "Installing dependencies..."
+                    npm install
                 '''
             }
         }
+
         stage('Build React App') {
             steps {
                 sh '''
-                    NPM_BIN=""
-
-                    for candidate in \
-                        /usr/local/bin/npm \
-                        /usr/bin/npm \
-                        /usr/local/nvm/versions/node/*/bin/npm \
-                        /opt/nvm/versions/node/*/bin/npm \
-                        /root/.nvm/versions/node/*/bin/npm \
-                        /home/ubuntu/.nvm/versions/node/*/bin/npm \
-                        /home/jenkins/.nvm/versions/node/*/bin/npm \
-                        /var/lib/jenkins/.nvm/versions/node/*/bin/npm \
-                        /opt/node/bin/npm \
-                        /opt/nodejs/bin/npm \
-                        /usr/local/nodejs/bin/npm \
-                        /snap/bin/npm
-                    do
-                        if [ -x "$candidate" ]; then
-                            NPM_BIN="$candidate"
-                            break
-                        fi
-                    done
-
-                    if [ -z "$NPM_BIN" ]; then
-                        echo "ERROR: npm not found"
-                        exit 1
-                    fi
-
-                    $NPM_BIN run build
+                    echo "Building React app..."
+                    npm run build
                 '''
             }
         }
+
         stage('Deploy Build') {
             steps {
                 sh '''
                     mkdir -p $DEPLOY_DIR
-                    rm -rf $DEPLOY_DIR/dist
-                    cp -r dist $DEPLOY_DIR/
+                    rm -rf $DEPLOY_DIR/*
+                    cp -r dist/* $DEPLOY_DIR/
                 '''
             }
         }
+
         stage('Start Application (PM2)') {
             steps {
                 sh '''
-                    PM2_BIN=""
+                    echo "Starting application with PM2..."
 
-                    for candidate in \
-                        /usr/local/bin/pm2 \
-                        /usr/bin/pm2 \
-                        /usr/local/nvm/versions/node/*/bin/pm2 \
-                        /opt/nvm/versions/node/*/bin/pm2 \
-                        /root/.nvm/versions/node/*/bin/pm2 \
-                        /home/ubuntu/.nvm/versions/node/*/bin/pm2 \
-                        /home/jenkins/.nvm/versions/node/*/bin/pm2 \
-                        /var/lib/jenkins/.nvm/versions/node/*/bin/pm2 \
-                        /opt/node/bin/pm2 \
-                        /snap/bin/pm2
-                    do
-                        if [ -x "$candidate" ]; then
-                            PM2_BIN="$candidate"
-                            echo "Found pm2 at: $PM2_BIN"
-                            break
-                        fi
-                    done
-
-                    if [ -z "$PM2_BIN" ]; then
-                        echo "ERROR: pm2 not found"
-                        exit 1
-                    fi
-
-                    $PM2_BIN delete $APP_NAME || true
-                    $PM2_BIN start "serve -s $DEPLOY_DIR/dist -l $PORT" --name $APP_NAME
-                    $PM2_BIN save
+                    pm2 delete $APP_NAME || true
+                    pm2 start "serve -s $DEPLOY_DIR -l $PORT" --name $APP_NAME
+                    pm2 save
                 '''
             }
         }
     }
+
     post {
         success {
             echo "Frontend running on port 3001 via PM2"
