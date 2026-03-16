@@ -2,50 +2,54 @@ pipeline {
     agent any
 
     environment {
-        APP_DIR = "/var/www/cinnamon-miracle-frontend"
-        REPO = "https://github.com/mgunawardhana/cinnamon-miracle-frontend.git"
+        DEPLOY_DIR = "/var/www/cinnamon-miracle-frontend"
+        APP_NAME = "cinnamon-frontend"
     }
 
     stages {
 
-        stage('Clone Repository') {
+        stage('Checkout Code') {
             steps {
-                sh """
-                rm -rf \$APP_DIR
-                git clone \$REPO \$APP_DIR
-                """
+                checkout scm
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                sh """
-                cd \$APP_DIR
+                sh '''
                 npm install
-                """
+                '''
             }
         }
 
         stage('Build React App') {
             steps {
-                sh """
-                cd \$APP_DIR
+                sh '''
                 npm run build
-                """
+                '''
             }
         }
 
-        stage('Deploy & Run') {
+        stage('Deploy') {
             steps {
-                sh """
-                cd \$APP_DIR
+                sh '''
+                mkdir -p $DEPLOY_DIR
 
-                pm2 delete cinnamon-frontend || true
+                rm -rf $DEPLOY_DIR/dist
+                cp -r dist $DEPLOY_DIR/
+                '''
+            }
+        }
 
-                pm2 start "serve -s dist -l 3001" --name cinnamon-frontend
+        stage('Run Application') {
+            steps {
+                sh '''
+                pm2 delete $APP_NAME || true
+
+                pm2 start "serve -s $DEPLOY_DIR/dist -l 3001" --name $APP_NAME
 
                 pm2 save
-                """
+                '''
             }
         }
     }
