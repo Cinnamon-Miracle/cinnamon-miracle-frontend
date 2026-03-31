@@ -3,6 +3,7 @@ import { Button, Grid } from '@mui/material';
 import { Form, Formik, FormikHelpers } from 'formik';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import NavigationViewComp from '../../../../common/FormComponents/NavigationViewComp';
 import MaterialTableWrapper from '../../../../common/tableComponents/MaterialTableWrapper';
 import CategoryEditModel from './components/CategoryEditModel';
@@ -12,7 +13,6 @@ import {
 	deleteCategory,
 	fetchAllCategoriesWithPagination
 } from '../../../../axios/services/mega-city-services/category-services/Category';
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 // Define interfaces
 interface Category {
@@ -282,11 +282,11 @@ function Category(): JSX.Element {
 								className="flex justify-end items-center gap-[10px] pt-[5px!important]"
 							>
 								<Button
-									className="min-w-[100px] min-h-[36px] max-h-[36px] text-[14px] text-white font-medium py-0 rounded-[6px] bg-yellow-800 hover:bg-yellow-800/80"
+									className="min-w-[100px] min-h-[36px] max-h-[36px] text-[14px] text-white font-medium py-0 rounded-[6px] bg-[#16a085] hover:bg-[#16a085]"
 									type="button"
 									variant="contained"
 									onClick={toggleNewCategoryModal}
-									startIcon={<AddCircleOutlineIcon/>}
+									startIcon={<AddCircleOutlineIcon />}
 								>
 									{t('Create Category')}
 								</Button>

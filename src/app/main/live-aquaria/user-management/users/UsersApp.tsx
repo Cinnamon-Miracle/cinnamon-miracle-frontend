@@ -180,8 +180,8 @@ const UsersApp: React.FC = () => {
 				if (rowData.role === 'DEVELOPER') {
 					return (
 						<span>
-                      -- <LockIcon sx={{ color: '#00C853', fontSize: '18px' }} /> --
-                   </span>
+							-- <LockIcon sx={{ color: '#00C853', fontSize: '18px' }} /> --
+						</span>
 					);
 				}
 
@@ -195,8 +195,8 @@ const UsersApp: React.FC = () => {
 				if (rowData.role === 'DEVELOPER') {
 					return (
 						<span>
-                      -- <LockIcon sx={{ color: '#00C853', fontSize: '18px' }} /> --
-                   </span>
+							-- <LockIcon sx={{ color: '#00C853', fontSize: '18px' }} /> --
+						</span>
 					);
 				}
 
@@ -210,8 +210,8 @@ const UsersApp: React.FC = () => {
 				if (rowData.role === 'DEVELOPER') {
 					return (
 						<span>
-                      -- <LockIcon sx={{ color: '#00C853', fontSize: '18px' }} /> --
-                   </span>
+							-- <LockIcon sx={{ color: '#00C853', fontSize: '18px' }} /> --
+						</span>
 					);
 				}
 
@@ -225,8 +225,8 @@ const UsersApp: React.FC = () => {
 				if (rowData.role === 'DEVELOPER') {
 					return (
 						<span>
-                      -- <LockIcon sx={{ color: '#00C853', fontSize: '18px' }} /> --
-                   </span>
+							-- <LockIcon sx={{ color: '#00C853', fontSize: '18px' }} /> --
+						</span>
 					);
 				}
 
@@ -260,8 +260,8 @@ const UsersApp: React.FC = () => {
 							minWidth: '70px'
 						}}
 					>
-                   {t(rowData.role)}
-                </span>
+						{t(rowData.role)}
+					</span>
 				);
 			}
 		}
@@ -327,7 +327,7 @@ const UsersApp: React.FC = () => {
 					className="flex flex-wrap justify-end items-end gap-[10px] pt-[10px!important]"
 				>
 					<Button
-						className="min-w-[100px] min-h-[36px] max-h-[36px] text-[10px] sm:text-[12px] lg:text-[14px] text-white font-medium rounded-[6px] bg-yellow-800 hover:bg-yellow-900/80"
+						className="min-w-[100px] min-h-[36px] max-h-[36px] text-[10px] sm:text-[12px] lg:text-[14px] text-white font-medium rounded-[6px] bg-[#16a085] hover:bg-[#16a085]"
 						variant="contained"
 						size="medium"
 						onClick={() => handleFormModelOpen(true, false, false, null)}

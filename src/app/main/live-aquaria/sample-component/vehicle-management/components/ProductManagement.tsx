@@ -845,7 +845,7 @@ function ProductManagement({
 										<Button
 											type="submit"
 											variant="contained"
-											className="min-w-[100px] min-h-[36px] max-h-[36px] text-[10px] sm:text-[12px] lg:text-[14px] text-white font-500 py-0 rounded-[6px] bg-yellow-800 hover:bg-yellow-800/80"
+											className="min-w-[100px] min-h-[36px] max-h-[36px] text-[10px] sm:text-[12px] lg:text-[14px] text-white font-500 py-0 rounded-[6px] bg-[#16a085] hover:bg-[#16a085]"
 											disabled={isDataLoading || isRefreshingItemCode}
 										>
 											{t('Save')}

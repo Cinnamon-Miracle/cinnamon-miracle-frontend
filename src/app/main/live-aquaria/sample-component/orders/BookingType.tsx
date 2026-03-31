@@ -1335,7 +1335,7 @@ function BookingType() {
 												{t('Reset')}
 											</Button>
 											<Button
-												className="min-w-[120px] min-h-[36px] max-h-[36px] text-[10px] sm:text-[12px] lg:text-[14px] text-white font-500 py-0 rounded-[6px] bg-green-600 hover:bg-green-800"
+												className="min-w-[120px] min-h-[36px] max-h-[36px] text-[10px] sm:text-[12px] lg:text-[14px] text-white font-500 py-0 rounded-[6px] bg-[#16a085] hover:bg-[#16a085]"
 												type="button"
 												variant="contained"
 												onClick={handleNotify}

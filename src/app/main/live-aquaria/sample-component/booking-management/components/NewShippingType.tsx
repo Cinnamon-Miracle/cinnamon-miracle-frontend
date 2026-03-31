@@ -182,7 +182,7 @@ function NewShippingTypeModel({ isOpen, toggleModal, clickedRowData, fetchAllShi
 
 								<Grid item lg={12} className="flex justify-end gap-2">
 									<Button type="submit" variant="contained"
-											className="bg-yellow-800 text-white searchButton">
+											className="bg-[#16a085] hover:bg-[#16a085] text-white searchButton">
 										{t('Save')}
 										{isDataLoading && <CircularProgress size={24} className="ml-2" />}
 									</Button>

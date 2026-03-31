@@ -502,9 +502,8 @@ function ContactForm() {
 					Cancel
 				</Button>
 				<Button
-					className="ml-8"
+					className="ml-8 bg-[#16a085] hover:bg-[#16a085]"
 					variant="contained"
-					color="secondary"
 					disabled={_.isEmpty(dirtyFields) || !isValid}
 					onClick={handleSubmit(onSubmit)}
 				>

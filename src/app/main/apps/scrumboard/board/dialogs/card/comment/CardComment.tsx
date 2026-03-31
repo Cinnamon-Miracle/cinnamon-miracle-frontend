@@ -83,10 +83,9 @@ function CardComment(props: CardCommentProps) {
 				/>
 
 				<Button
-					className="mt-16"
+					className="mt-16 bg-[#16a085] hover:bg-[#16a085]"
 					aria-label="save"
 					variant="contained"
-					color="secondary"
 					type="submit"
 					size="small"
 					disabled={_.isEmpty(dirtyFields) || !isValid}

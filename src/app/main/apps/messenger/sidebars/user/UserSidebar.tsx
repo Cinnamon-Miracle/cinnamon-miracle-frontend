@@ -187,9 +187,8 @@ function UserSidebar() {
 				<div className="flex items-center justify-end mt-32">
 					<Button className="mx-8">Cancel</Button>
 					<Button
-						className="mx-8"
+						className="mx-8 bg-[#16a085] hover:bg-[#16a085]"
 						variant="contained"
-						color="secondary"
 						disabled={_.isEmpty(dirtyFields) || !isValid}
 						onClick={handleSubmit(onSubmit)}
 					>

@@ -127,7 +127,7 @@ function ProductHeader() {
 							Remove
 						</Button>
 						<Button
-							className="whitespace-nowrap mx-4"
+							className="whitespace-nowrap mx-4 bg-[#16a085] hover:bg-[#16a085]"
 							variant="contained"
 							color="secondary"
 							disabled={_.isEmpty(dirtyFields) || !isValid}

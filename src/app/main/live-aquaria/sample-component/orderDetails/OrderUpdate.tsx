@@ -365,7 +365,7 @@ const OrderUpdate: React.FC<Props> = ({ isOpen, toggleModal, clickedRowData, ref
 										type="submit"
 										variant="contained"
 										disabled={isDataLoading}
-										className="min-w-[100px] min-h-[36px] max-h-[36px] text-[14px] text-white font-medium py-0 rounded-[6px] bg-yellow-800 hover:bg-yellow-800/80"
+										className="min-w-[100px] min-h-[36px] max-h-[36px] text-[14px] text-white font-medium py-0 rounded-[6px] bg-[#16a085] hover:bg-[#16a085]"
 									>
 										{t('Save')}
 										{isDataLoading && (

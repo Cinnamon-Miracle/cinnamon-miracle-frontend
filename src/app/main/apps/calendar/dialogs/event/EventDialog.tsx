@@ -323,7 +323,7 @@ function EventDialog() {
 						</IconButton>
 						<Button
 							variant="contained"
-							color="primary"
+							className="bg-[#16a085] hover:bg-[#16a085]"
 							onClick={onSubmit}
 							disabled={_.isEmpty(dirtyFields) || !isValid}
 						>

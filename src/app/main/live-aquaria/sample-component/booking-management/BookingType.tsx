@@ -839,7 +839,7 @@ function NewOrders() {
 							{/*</div>*/}
 							<Button
 								variant="contained"
-								color="primary"
+								className="bg-[#16a085] hover:bg-[#16a085]"
 								fullWidth
 								onClick={handleAddToCart}
 								startIcon={<ShoppingCartIcon />}
@@ -1132,6 +1132,7 @@ function NewOrders() {
 							</Box>
 							<Box sx={{ mt: 'auto', display: 'flex', gap: 2 }}>
 								<PlaceOrderButton
+									className="bg-[#16a085] hover:bg-[#16a085]"
 									variant="contained"
 									fullWidth
 									onClick={handlePrintBill}
@@ -1146,6 +1147,7 @@ function NewOrders() {
 									{t('Print Bill')}
 								</PlaceOrderButton>
 								<PlaceOrderButton
+									className="bg-[#16a085] hover:bg-[#16a085]"
 									variant="contained"
 									fullWidth
 									onClick={handlePlaceOrder}
