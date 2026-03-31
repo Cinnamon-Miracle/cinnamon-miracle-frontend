@@ -105,38 +105,38 @@ const navigationConfig: FuseNavItemType[] = [
 		icon: 'heroicons-outline:document-report',
 		url: 'web/orders-details',
 		auth: ['admin', 'staff']
-	},
-	{
-		id: 'ecommerceManagement',
-		title: 'Ecommerce Management',
-		subtitle: 'Online Store Operations',
-		type: 'group',
-		icon: 'heroicons-outline:shopping-cart',
-		auth: ['admin', 'staff'],
-		children: [
-			{
-				id: 'customers',
-				title: 'Customers',
-				type: 'item',
-				icon: 'heroicons-outline:users',
-				url: '/customers'
-			},
-			{
-				id: 'onlineOrders',
-				title: 'Online Orders',
-				type: 'item',
-				icon: 'heroicons-outline:inbox',
-				url: '/orders'
-			},
-			{
-				id: 'shipping',
-				title: 'Shipping & Delivery',
-				type: 'item',
-				icon: 'heroicons-outline:truck',
-				url: '/shipping'
-			}
-		]
 	}
+	// {
+	// 	id: 'ecommerceManagement',
+	// 	title: 'Ecommerce Management',
+	// 	subtitle: 'Online Store Operations',
+	// 	type: 'group',
+	// 	icon: 'heroicons-outline:shopping-cart',
+	// 	auth: ['admin', 'staff'],
+	// 	children: [
+	// 		{
+	// 			id: 'customers',
+	// 			title: 'Customers',
+	// 			type: 'item',
+	// 			icon: 'heroicons-outline:users',
+	// 			url: '/customers'
+	// 		},
+	// 		{
+	// 			id: 'onlineOrders',
+	// 			title: 'Online Orders',
+	// 			type: 'item',
+	// 			icon: 'heroicons-outline:inbox',
+	// 			url: '/orders'
+	// 		},
+	// 		{
+	// 			id: 'shipping',
+	// 			title: 'Shipping & Delivery',
+	// 			type: 'item',
+	// 			icon: 'heroicons-outline:truck',
+	// 			url: '/shipping'
+	// 		}
+	// 	]
+	// }
 ];
 
 export default navigationConfig;
