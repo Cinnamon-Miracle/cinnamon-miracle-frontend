@@ -32,7 +32,7 @@ export default defineConfig({
 		// open: true,
 		host: true,
 		// strictPort:true,
-		port: 3000
+		port: 3001
 	},
 	define: {
 		global: 'window'

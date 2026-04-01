@@ -1122,32 +1122,101 @@ function BookingType() {
 		{
 			title: t('Less Amount'),
 			field: 'orders.less',
+			cellStyle: { paddingTop: 16, paddingBottom: 16 },
 			render: (rowData: OrderGroup) => {
-				const totalLessAmount = rowData.orders.reduce((sum, order) => sum + (order.less || 0), 0);
+				const totalLessAmount = rowData.orders.reduce(
+					(sum, order) => sum + (order.less || 0),
+					0
+				);
+
+				if (totalLessAmount > 0) {
+					return (
+						<span
+							style={{
+								display: 'inline-block',
+								padding: '6px 12px',
+								borderRadius: '16px',
+								color: '#D32F2F',
+								backgroundColor: '#FDECEA',
+								fontSize: '12px',
+								fontWeight: 500,
+								textAlign: 'center',
+								minWidth: '90px'
+							}}
+						>
+					LKR {totalLessAmount.toFixed(2)}
+				</span>
+					);
+				}
+
 				return `LKR ${totalLessAmount.toFixed(2)}`;
-			},
-			cellStyle: { paddingTop: 16, paddingBottom: 16 }
+			}
 		},
 		{
 			title: t('Gift Amount'),
 			field: 'orders.gift',
+			cellStyle: { paddingTop: 16, paddingBottom: 16 },
 			render: (rowData: OrderGroup) => {
-				const totalGiftAmount = rowData.orders.reduce((sum, order) => sum + (order.gift || 0), 0);
+				const totalGiftAmount = rowData.orders.reduce(
+					(sum, order) => sum + (order.gift || 0),
+					0
+				);
+
+				if (totalGiftAmount > 0) {
+					return (
+						<span
+							style={{
+								display: 'inline-block',
+								padding: '6px 12px',
+								borderRadius: '16px',
+								color: '#D32F2F',
+								backgroundColor: '#FDECEA',
+								fontSize: '12px',
+								fontWeight: 500,
+								textAlign: 'center',
+								minWidth: '90px'
+							}}
+						>
+					LKR {totalGiftAmount.toFixed(2)}
+				</span>
+					);
+				}
+
 				return `LKR ${totalGiftAmount.toFixed(2)}`;
-			},
-			cellStyle: { paddingTop: 16, paddingBottom: 16 }
+			}
 		},
 		{
 			title: t('Discount Amount'),
 			field: 'orders.discount.amount',
+			cellStyle: { paddingTop: 16, paddingBottom: 16 },
 			render: (rowData: OrderGroup) => {
 				const totalDiscountAmount = rowData.orders.reduce(
 					(sum, order) => sum + (order.discount?.amount || 0),
 					0
 				);
+
+				if (totalDiscountAmount > 0) {
+					return (
+						<span
+							style={{
+								display: 'inline-block',
+								padding: '6px 12px',
+								borderRadius: '16px',
+								color: '#D32F2F',
+								backgroundColor: '#FDECEA',
+								fontSize: '12px',
+								fontWeight: 500,
+								textAlign: 'center',
+								minWidth: '90px'
+							}}
+						>
+					LKR {totalDiscountAmount.toFixed(2)}
+				</span>
+					);
+				}
+
 				return `LKR ${totalDiscountAmount.toFixed(2)}`;
-			},
-			cellStyle: { paddingTop: 16, paddingBottom: 16 }
+			}
 		},
 		{
 			title: t('Total'),
