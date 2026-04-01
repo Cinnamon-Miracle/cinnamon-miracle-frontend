@@ -238,14 +238,24 @@ const UsersApp: React.FC = () => {
 			field: 'role',
 			cellStyle: { padding: '4px 8px' },
 			render: (rowData: UserInterface) => {
+				// Colors: STAFF is Green, ADMIN is Blue, ROOT is Red
 				const roleColors: Record<string, { text: string; bg: string }> = {
-					STAFF: { text: '#1E88E5', bg: '#E3F2FD' },
-					ROOT: { text: '#E53935', bg: '#FFEBEE' },
-					ADMIN: { text: '#0f8515', bg: '#deffe1' },
+					STAFF: { text: '#388E3C', bg: '#E8F5E9' },
+					ADMIN: { text: '#1E88E5', bg: '#E3F2FD' },
+					ROOT: { text: '#D32F2F', bg: '#FBE9E7' },
 					DEMONSTRATOR: { text: '#440f85', bg: '#f0e3fb' },
 					DEVELOPER: { text: '#1c0606', bg: '#c3bebe' }
 				};
-				const { text, bg } = roleColors[rowData.role] ?? { text: '#424242', bg: '#E0E0E0' };
+
+				// Normalize to uppercase for mapping to the color dictionary
+				const normalizedRole = rowData.role?.toUpperCase() || '';
+				const { text, bg } = roleColors[normalizedRole] ?? { text: '#424242', bg: '#E0E0E0' };
+
+				// Capitalize first letter, lowercase the rest (e.g., "STAFF" -> "Staff")
+				const formattedRole = rowData.role
+					? rowData.role.charAt(0).toUpperCase() + rowData.role.slice(1).toLowerCase()
+					: '';
+
 				return (
 					<span
 						style={{
@@ -260,7 +270,7 @@ const UsersApp: React.FC = () => {
 							minWidth: '70px'
 						}}
 					>
-						{t(rowData.role)}
+						{t(formattedRole)}
 					</span>
 				);
 			}

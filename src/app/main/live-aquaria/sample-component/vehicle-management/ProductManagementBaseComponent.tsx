@@ -61,7 +61,7 @@ function ProductManagementBaseComponent() {
 	const { t } = useTranslation('productManagement');
 
 	const [pageNo, setPageNo] = useState<number>(1); // API uses 1-based pagination
-	const [pageSize, setPageSize] = useState<number>(5);
+	const [pageSize, setPageSize] = useState<number>(10);
 	const [count, setCount] = useState<number>(0);
 	const [isOpenProductViewModal, setIsOpenProductViewModal] = useState<boolean>(false);
 	const [isOpenProductEditModal, setIsOpenProductEditModal] = useState<boolean>(false);
@@ -137,7 +137,34 @@ function ProductManagementBaseComponent() {
 		{
 			title: t('Quantity'),
 			field: 'stocks',
-			cellStyle: { padding: '6px 8px' }
+			cellStyle: { padding: '6px 8px' },
+			render: (rowData: any) => { // Update 'any' to your specific interface type, e.g., Product or UserInterface
+				// Treat null/undefined as 0 just to be safe
+				const quantity = rowData.stocks || 0;
+
+				// If quantity is 0 (or less), use Red. Otherwise, use Green.
+				const isOutOfStock = quantity <= 0;
+				const color = isOutOfStock ? '#D32F2F' : '#388E3C'; // Red text for 0, Green for > 0
+				const bg = isOutOfStock ? '#FBE9E7' : '#E8F5E9';    // Red bg for 0, Green bg for > 0
+
+				return (
+					<span
+						style={{
+							display: 'inline-block',
+							padding: '4px 12px',
+							borderRadius: '16px',
+							color: color,
+							backgroundColor: bg,
+							fontSize: '12px',
+							fontWeight: 500,
+							textAlign: 'center',
+							minWidth: '60px'
+						}}
+					>
+            {quantity}
+         </span>
+				);
+			}
 		},
 		{
 			title: t('Brand Name'),
@@ -359,7 +386,7 @@ function ProductManagementBaseComponent() {
 						handlePageChange={handlePageChange}
 						handlePageSizeChange={handlePageSizeChange}
 						pageSize={pageSize}
-						pageSizeOptions={[5, 10, 25]}
+						pageSizeOptions={[20, 50, 100]}
 						loading={isTableLoading}
 						setPageSize={setPageSize}
 						pageIndex={pageNo - 1} // Convert back to 0-based for MaterialTable

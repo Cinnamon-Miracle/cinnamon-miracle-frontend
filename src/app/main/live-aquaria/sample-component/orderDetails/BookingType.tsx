@@ -335,9 +335,47 @@ function BookingType() {
 			cellStyle: { paddingTop: 16, paddingBottom: 16, minWidth: '80px' }
 		},
 		{
-			title: t('Demonstrator'), // ADD: New column
+			title: t('Demonstrator'),
 			field: 'demonstratorName',
-			cellStyle: { paddingTop: 16, paddingBottom: 16 }
+			cellStyle: { paddingTop: 16, paddingBottom: 16 },
+			render: (rowData: UserInterface) => {
+				// If there is no demonstrator assigned, just return a dash
+				if (!rowData.demonstratorName) {
+					return <span>-</span>;
+				}
+
+				// Map names to their specific colors
+				const demonstratorColors: Record<string, { text: string; bg: string }> = {
+					DAKSHINA: { text: '#388E3C', bg: '#E8F5E9' }, // Green
+					ASHOK: { text: '#1E88E5', bg: '#E3F2FD' } // Blue
+				};
+
+				// Normalize to uppercase to safely check the dictionary
+				const normalizedName = rowData.demonstratorName.toUpperCase();
+				const { text, bg } = demonstratorColors[normalizedName] ?? { text: '#424242', bg: '#E0E0E0' }; // Default to grey for other names
+
+				// Capitalize first letter, lowercase the rest
+				const formattedName =
+					rowData.demonstratorName.charAt(0).toUpperCase() + rowData.demonstratorName.slice(1).toLowerCase();
+
+				return (
+					<span
+						style={{
+							display: 'inline-block',
+							padding: '4px 10px',
+							borderRadius: '16px',
+							color: text,
+							backgroundColor: bg,
+							fontSize: '12px',
+							fontWeight: 500,
+							textAlign: 'center',
+							minWidth: '70px'
+						}}
+					>
+						{formattedName}
+					</span>
+				);
+			}
 		},
 		{
 			title: t('Total Per Order'),

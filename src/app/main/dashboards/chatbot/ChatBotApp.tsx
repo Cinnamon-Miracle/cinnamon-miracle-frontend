@@ -159,9 +159,9 @@ function MultiAxisLineChart({ data, title = 'Multi-Axis Line Chart' }: { data: C
 						},
 						y1: {
 							position: 'right',
-							title: { display: true, text: 'Count', color: '#6366F1' },
+							title: { display: true, text: 'Count', color: '#6f70dc' },
 							grid: { drawOnChartArea: false },
-							ticks: { color: '#6366F1' }
+							ticks: { color: '#6c6fe1' }
 						},
 						x: { ticks: { color: '#1e3a8a' } }
 					}
