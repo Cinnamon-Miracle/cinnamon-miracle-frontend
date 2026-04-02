@@ -1,13 +1,19 @@
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
+import Divider from '@mui/material/Divider';
 import { useState } from 'react';
 import CardContent from '@mui/material/CardContent';
 import { Link } from 'react-router-dom';
 import JwtLoginTab from './tabs/JwtSignInTab';
 import FirebaseSignInTab from './tabs/FirebaseSignInTab';
 import AwsSignInTab from './tabs/AwsSignInTab';
-import image from '../../assets/Flux_Schnell_a_surreal_and_vibrant_cinematic_photo_of_Create_a_0.jpg';
+import image from '../../assets/Flux_Schnell_A_hyperrealistic_ultrapremium_cinematic_wide_comp_2.jpg';
+
+// Material Icons
+import GoogleIcon from '@mui/icons-material/Google';
+import CameraAltIcon from '@mui/icons-material/CameraAlt';
 
 const tabs = [
 	{
@@ -25,6 +31,11 @@ function SignInPage() {
 		setSelectedTabId(id);
 	};
 
+	const handleOpenCamera = () => {
+		// Add your camera logic here (e.g., standard HTML5 navigator.mediaDevices.getUserMedia)
+		console.log("Opening camera...");
+	};
+
 	return (
 		<div className="flex min-h-screen w-full flex-col items-center justify-center bg-gray-50">
 			<Paper
@@ -38,36 +49,76 @@ function SignInPage() {
 				}}
 			>
 				{/* LEFT SECTION */}
-				<div className="w-full px-16 py-32 sm:w-auto sm:p-48 md:p-64">
+				<div className="w-full px-20 py-32 sm:w-auto sm:p-48 md:p-64">
 					<CardContent className="mx-auto w-full max-w-320 sm:mx-0 sm:w-320">
 						{/* Logo */}
 						<img
-							className="w-48 mb-8"
-							src="assets/images/logo/logo.svg"
+							className="mb-8 w-48"
+							src="assets/images/logo/icons8-cinnamon-sticks-120.png"
 							alt="logo"
 						/>
 
 						{/* Title */}
-						<Typography className="text-4xl text-gray-900 font-extrabold leading-tight tracking-tight">
+						<Typography className="text-4xl font-extrabold leading-tight tracking-tight text-gray-900">
 							Sign In
 						</Typography>
 
-						{/* Sub text */}
-						<div className="mt-2 flex items-baseline font-medium">
-							<Typography className="text-gray-700">Don't have an account?</Typography>
-							<Link
-								className="ml-4 text-blue-600 hover:underline"
-								to=""
-							>
-								Sign up
-							</Link>
-						</div>
-
-						{/* Tabs */}
-						<div className="mt-24">
+						{/* Tabs (Assumes your primary sign in button is inside these components) */}
+						<div className="mt-12">
 							{selectedTabId === 'jwt' && <JwtLoginTab />}
-							{selectedTabId === 'firebase' && <FirebaseSignInTab />}
-							{selectedTabId === 'aws' && <AwsSignInTab />}
+													</div>
+
+						{/* Extra Login Options */}
+						<div className="mt-6 flex flex-col gap-4">
+							<Divider sx={{ my: 1, fontSize: '0.875rem', color: 'text.secondary' }}>
+								OR
+							</Divider>
+
+							{/* Google Sign In Button */}
+							<Button
+								variant="outlined"
+								fullWidth
+								className="mb-6"
+								startIcon={<GoogleIcon />}
+								sx={{
+									borderColor: '#e5e7eb',
+									color: '#374151',
+									textTransform: 'none',
+									py: 1.5,
+									fontWeight: 600,
+									borderRadius: '8px',
+									'&:hover': {
+										borderColor: '#111827',
+										backgroundColor: '#fff7ed', // Light orange tint
+										color: '#111827'
+									}
+								}}
+							>
+								Continue with Google
+							</Button>
+
+							{/* Open Camera Button */}
+							<Button
+								variant="contained"
+								fullWidth
+								startIcon={<CameraAltIcon />}
+								onClick={handleOpenCamera}
+								sx={{
+									backgroundColor: '#111827',
+									color: '#fff',
+									textTransform: 'none',
+									py: 1.5,
+									fontWeight: 600,
+									borderRadius: '8px',
+									boxShadow: 'none',
+									'&:hover': {
+										backgroundColor: '#111827',
+										boxShadow: '0 4px 6px -1px rgba(239, 139, 52, 0.4)',
+									}
+								}}
+							>
+								Open Camera to Login
+							</Button>
 						</div>
 					</CardContent>
 				</div>
@@ -86,8 +137,8 @@ function SignInPage() {
 					<Box
 						sx={{
 							position: 'absolute',
-							top: 400,
-							backgroundColor: 'rgba(0, 0, 0, 0.55)',
+							top: 535,
+							backgroundColor: '#000000',
 							padding: '16px 20px',
 							borderRadius: '12px'
 						}}

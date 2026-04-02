@@ -386,14 +386,60 @@ function BookingType() {
 		{
 			title: t('Discount'),
 			field: 'discountPercentage',
-			render: (rowData: ProductOrder) => `${rowData.discountPercentage}%`,
-			cellStyle: { paddingTop: 16, paddingBottom: 16 }
+			cellStyle: { paddingTop: 16, paddingBottom: 16 },
+			render: (rowData: ProductOrder) => {
+				const value = rowData.discountPercentage || 0;
+
+				if (value > 0) {
+					return (
+						<span
+							style={{
+								display: 'inline-block',
+								padding: '4px 10px',
+								borderRadius: '16px',
+								color: '#D32F2F',
+								backgroundColor: '#FDECEA',
+								fontSize: '12px',
+								fontWeight: 500,
+								textAlign: 'center'
+							}}
+						>
+					{value}%
+				</span>
+					);
+				}
+
+				return `${value}%`;
+			}
 		},
 		{
 			title: t('Discount Amount'),
 			field: 'discountAmount',
-			render: (rowData: ProductOrder) => `LKR ${rowData.discountAmount.toFixed(2)}`,
-			cellStyle: { paddingTop: 16, paddingBottom: 16 }
+			cellStyle: { paddingTop: 16, paddingBottom: 16 },
+			render: (rowData: ProductOrder) => {
+				const value = rowData.discountAmount || 0;
+
+				if (value > 0) {
+					return (
+						<span
+							style={{
+								display: 'inline-block',
+								padding: '4px 10px',
+								borderRadius: '16px',
+								color: '#D32F2F',
+								backgroundColor: '#FDECEA',
+								fontSize: '12px',
+								fontWeight: 500,
+								textAlign: 'center'
+							}}
+						>
+					LKR {value.toFixed(2)}
+				</span>
+					);
+				}
+
+				return `LKR ${value.toFixed(2)}`;
+			}
 		}
 	];
 

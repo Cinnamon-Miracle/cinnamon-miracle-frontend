@@ -224,7 +224,7 @@ function ModernReversedSignInPage() {
 									render={({ field }) => (
 										<FormControl>
 											<FormControlLabel
-												label="Remember me"
+												label="Remember "
 												control={
 													<Checkbox
 														size="small"

@@ -128,7 +128,7 @@ function ModernSignInPage() {
 									render={({ field }) => (
 										<FormControl>
 											<FormControlLabel
-												label="Remember me"
+												label="Remember "
 												control={
 													<Checkbox
 														size="small"
