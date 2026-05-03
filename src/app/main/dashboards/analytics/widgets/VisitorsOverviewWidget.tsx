@@ -20,9 +20,9 @@ function VisitorsOverviewWidget() {
 		return null;
 	}
 
-	const { , ranges } = widget;
+	const { ranges } = widget;
 
-	const [tabValue, ] = useState(0);
+	const [tabValue] = useState(0);
 	const currentRange = Object.keys(ranges)[tabValue];
 
 	const chartOptions: ApexOptions = {
