@@ -39,6 +39,7 @@ export type BookingDetails = {
 	customerRegistrationNumber: string;
 	driverId: string;
 	status: 'PENDING' | 'COMPLETED' | 'CANCELLED' | 'CLOSED';
+	active?: boolean;
 };
 
 export type ShippingCreateType = {

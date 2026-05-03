@@ -31,8 +31,10 @@ export type GuidelineType = {
 
 
 export type ShippingTypeModifiedData = {
-
+	active?: boolean;
+	[key: string]: any;
 };
+
 
 export type VehicleResp = {
 	id: number;

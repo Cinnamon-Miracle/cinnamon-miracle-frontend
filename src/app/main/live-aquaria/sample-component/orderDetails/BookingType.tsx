@@ -338,7 +338,7 @@ function BookingType() {
 			title: t('Demonstrator'),
 			field: 'demonstratorName',
 			cellStyle: { paddingTop: 16, paddingBottom: 16 },
-			render: (rowData: UserInterface) => {
+			render: (rowData: ProductOrder) => {
 				// If there is no demonstrator assigned, just return a dash
 				if (!rowData.demonstratorName) {
 					return <span>-</span>;

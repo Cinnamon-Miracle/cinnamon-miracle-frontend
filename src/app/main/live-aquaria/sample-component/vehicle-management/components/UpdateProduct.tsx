@@ -30,14 +30,17 @@ interface Image {
 
 interface ProductData {
 	id?: string;
+	_id?: string; // Backend may return _id instead of id
 	itemCode: string;
 	itemName: string;
 	price: string | number;
 	brandName: string;
 	categoryName: string;
+	category?: string; // Backend may return category instead of categoryName
 	description: string;
 	isActive: boolean;
 	updatedBy: string;
+	updateDBy?: string; // Typo variant that may exist in API response
 	manufacturerName: string;
 	manufacturerCode: string;
 	warrantyPeriod: string | number;

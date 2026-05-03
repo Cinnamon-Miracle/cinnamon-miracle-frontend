@@ -59,7 +59,8 @@ function UserRolesForm(props: Props) {
 	const { handleSubmit, formState, control, reset } = useForm<Role>({
 		mode: 'onChange',
 		defaultValues,
-		resolver: zodResolver(schema)
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		resolver: zodResolver(schema) as any
 	});
 
 	const { errors } = formState;
@@ -67,7 +68,7 @@ function UserRolesForm(props: Props) {
 	function handleCloseDialog() {
 		setOpenDialog(false);
 		setIsFormOpen(false);
-		onCloseHandler();
+		onCloseHandler?.();
 	}
 
 	function onSubmit(data: Role) {
@@ -92,7 +93,7 @@ function UserRolesForm(props: Props) {
 			toast.error(error.response.data.message);
 		} finally {
 			setLoading(false);
-			onCloseHandler();
+			onCloseHandler?.();
 		}
 	}
 
@@ -113,7 +114,7 @@ function UserRolesForm(props: Props) {
 			toast.error(error.response.data.message);
 		} finally {
 			setLoading(false);
-			onCloseHandler();
+			onCloseHandler?.();
 		}
 	}
 
@@ -155,7 +156,7 @@ function UserRolesForm(props: Props) {
 				<DialogContent>
 					<form
 						noValidate
-						onSubmit={handleSubmit(onSubmit)}
+						onSubmit={handleSubmit(onSubmit as any)}
 						className="w-full"
 					>
 						<Grid

@@ -13,7 +13,7 @@ import { rootReducer } from 'app/store/lazyLoadedSlices';
 
 const navigationAdapter = createEntityAdapter<FuseFlatNavItemType>();
 
-const emptyInitialState = navigationAdapter.getInitialState([]);
+const emptyInitialState = navigationAdapter.getInitialState();
 
 const initialState = navigationAdapter.upsertMany(
 	emptyInitialState,

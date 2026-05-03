@@ -200,22 +200,8 @@ function ReturnUpdateModal({ isOpen, onClose, groupCode, orderCode, onUpdate }) 
 	);
 }
 
-// Add this function inside the OrderUpdate component
-const handleReturnUpdate = (amountToReduce) => {
-	// For this example, we'll assume the amount is split between the guide and boatman
-	// You can change this logic to fit your needs
-	const halfAmount = amountToReduce / 2;
-	setLessFromGuide((prev) => prev + halfAmount);
-	setLessFromBoatman((prev) => prev + halfAmount);
-
-	// This will enable the "Less Amount Management" section if it's not already
-	if (!isLessAmountEnabled) {
-		setIsLessAmountEnabled(true);
-	}
-
-	// Close the return update modal
-	setReturnUpdateModalOpen(false);
-};
+// handleReturnUpdate is defined inside BookingType component below
+// (moved to avoid referencing state from wrong scope)
 
 // Styled component for the main paper container
 const StyledPaper = styled(Paper)(({ theme }) => ({
@@ -798,6 +784,12 @@ function BookingType() {
 
 	const [isReturnUpdateModalOpen, setReturnUpdateModalOpen] = useState(false);
 
+	// Handles the return update callback from ReturnUpdateModal
+	const handleReturnUpdate = (_amountToReduce: number): void => {
+		// Close the return update modal after processing
+		setReturnUpdateModalOpen(false);
+	};
+
 	useEffect(() => {
 		fetchOrdersData();
 	}, []);
@@ -822,6 +814,7 @@ function BookingType() {
 						)
 					: {};
 
+				interface ApiResp { success: boolean; data?: OrderGroup[]; pagination?: { totalOrders?: number; totalPages?: number; currentPage?: number; ordersPerPage?: number; hasNextPage?: boolean; hasPrevPage?: boolean; nextPage?: number|null; prevPage?: number|null }; message?: string; }
 				const response = await fetchOrders(
 					pageNo + 1, // Convert 0-based to 1-based for backend
 					pageSize,
@@ -830,7 +823,7 @@ function BookingType() {
 					cleanFilters.groupCode || '',
 					cleanFilters.demonstratorName || '',
 					cleanFilters.boatmanName || ''
-				);
+				) as ApiResp;
 
 				if (response && response.success) {
 					const groups = response.data || [];
@@ -1561,6 +1554,8 @@ function BookingType() {
 				<ReturnUpdateModal
 					isOpen={isReturnUpdateModalOpen}
 					onClose={() => setReturnUpdateModalOpen(false)}
+					groupCode={selectedOrderGroup?.groupCode || ''}
+					orderCode={selectedOrderGroup?.orders?.[0]?.orderCode || ''}
 					onUpdate={handleReturnUpdate}
 				/>
 			)}

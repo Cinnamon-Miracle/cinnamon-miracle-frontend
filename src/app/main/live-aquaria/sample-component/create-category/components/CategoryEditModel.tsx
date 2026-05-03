@@ -9,6 +9,7 @@ import { createNewCategory } from '../../../../../axios/services/mega-city-servi
 import {updateCategory} from "../../../../../axios/services/mega-city-services/common/CommonService";
 
 interface CategoryType {
+	_id?: string;
 	categoryId: string;
 	categoryName: string;
 	reason: string;

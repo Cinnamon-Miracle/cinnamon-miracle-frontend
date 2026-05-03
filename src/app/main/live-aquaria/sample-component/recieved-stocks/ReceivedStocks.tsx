@@ -53,7 +53,7 @@ interface TableColumn {
 	cellStyle: {
 		padding: string;
 	};
-	render?: (rowData: ReceivedStock) => JSX.Element;
+	render?: (rowData: ReceivedStock) => JSX.Element | string;
 }
 
 export interface ReceivedProduct {
@@ -422,7 +422,8 @@ function ReceivedStocks(): JSX.Element {
 					isOpen={isOpenNewShippingTypeModal}
 					toggleModal={toggleNewShippingTypeModal}
 					isTableMode="new"
-					clickedRowData={{}}
+					// eslint-disable-next-line @typescript-eslint/no-explicit-any
+					clickedRowData={{} as any}
 					fetchAllGuidelines={fetchAllGuidelines}
 				/>
 			)}
@@ -456,7 +457,8 @@ function ReceivedStocks(): JSX.Element {
 				<ReceivedDeleteAlert
 					toggleModal={toggleDeleteModal}
 					isOpen={isOpenDeleteModal}
-					clickedRowData={selectedDeleteRowData}
+					// eslint-disable-next-line @typescript-eslint/no-explicit-any
+					clickedRowData={selectedDeleteRowData as any}
 					handleAlertForm={handleAlertForm}
 				/>
 			)}

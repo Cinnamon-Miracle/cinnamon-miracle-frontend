@@ -215,7 +215,8 @@ function ProductManagementBaseComponent() {
 	const fetchAllProductsFromBackend = async () => {
 		setTableLoading(true);
 		try {
-			const response: ApiResponse = await fetchAllProducts(pageNo, pageSize);
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			const response = await fetchAllProducts(pageNo, pageSize) as ApiResponse;
 			console.log('API Response:', response); // Debug log
 			console.log('Fetched products:', response.products?.length, 'PageSize:', pageSize);
 
@@ -414,7 +415,8 @@ function ProductManagementBaseComponent() {
 				<UpdateProduct
 					isOpen={isOpenProductViewModal}
 					toggleModal={toggleProductViewModal}
-					clickedRowData={selectedViewRowData}
+					// eslint-disable-next-line @typescript-eslint/no-explicit-any
+					clickedRowData={selectedViewRowData as any}
 					isTableMode="view"
 					fetchAllProducts={fetchAllProductsFromBackend}
 				/>
@@ -424,7 +426,8 @@ function ProductManagementBaseComponent() {
 				<UpdateProduct
 					isOpen={isOpenProductEditModal}
 					toggleModal={toggleProductEditModal}
-					clickedRowData={selectedEditRowData}
+					// eslint-disable-next-line @typescript-eslint/no-explicit-any
+					clickedRowData={selectedEditRowData as any}
 					isTableMode="edit"
 					fetchAllProducts={fetchAllProductsFromBackend}
 				/>
@@ -434,7 +437,8 @@ function ProductManagementBaseComponent() {
 				<VehicleManagementActiveComp
 					toggleModal={toggleActiveModal}
 					isOpen={isOpenActiveModal}
-					clickedRowData={selectedActiveRowData}
+					// eslint-disable-next-line @typescript-eslint/no-explicit-any
+					clickedRowData={selectedActiveRowData as any}
 					handleAlertForm={handleConfirmStatusChange}
 				/>
 			)}
@@ -443,7 +447,8 @@ function ProductManagementBaseComponent() {
 				<NewVehicleDeleteAlertForm
 					toggleModal={toggleDeleteModal}
 					isOpen={isOpenDeleteModal}
-					clickedRowData={selectedDeleteRowData}
+					// eslint-disable-next-line @typescript-eslint/no-explicit-any
+					clickedRowData={selectedDeleteRowData as any}
 					handleAlertForm={handleAlertForm}
 				/>
 			)}

@@ -16,6 +16,7 @@ export interface ReceivedProduct {
 	createdAt: string; // ISO date string
 	createdBy: string;
 	qty: number;
+	price?: number; // Optional price field
 	receivedProductID: string;
 	receivedProductName: string;
 	remark: string;
@@ -103,7 +104,8 @@ const NewVehicleManagement: React.FC<Props> = ({
 
 	const fetchAllProductsFromBackend = async () => {
 		try {
-			const response: ApiResponse = await fetchAllProducts(0, 100);
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			const response = await fetchAllProducts(0, 100) as ApiResponse;
 			setProducts(response.products);
 		} catch (error) {
 			console.error('Error fetching products:', error);

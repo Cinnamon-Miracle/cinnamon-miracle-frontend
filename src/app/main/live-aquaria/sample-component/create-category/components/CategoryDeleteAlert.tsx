@@ -6,12 +6,10 @@ import { DialogContentText } from '@mui/material';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
 import React from 'react';
-import { GuideType } from '../types/GuidelineTypes';
-
 interface Props {
 	toggleModal: () => void;
 	isOpen: boolean;
-	clickedRowData: GuideType;
+	clickedRowData: Record<string, any>;
 	handleAlertForm: () => void;
 }
 

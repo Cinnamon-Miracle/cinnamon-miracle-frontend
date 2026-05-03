@@ -15,6 +15,8 @@ interface Props {
 	disabled?:boolean,
 	onChange?:any,
 	value?:any,
+	fullWidth?:boolean,
+	size?:string,
 }
 function FormDropdown({
 						  name,
