@@ -16,9 +16,15 @@ import { toast } from 'react-toastify';
 import * as yup from 'yup';
 
 import TextFormField from '../../../../common/FormComponents/FormTextField';
-// // Note: You will need to create and import a service function for updating order groups.
+import { OrderGroup } from '../orders/BookingType';
+// Note: You will need to create and import a service function for updating order groups.
 // import { updateOrderGroup } from '../../../../axios/services/mega-city-services/common/CommonService';
-// import { OrderGroup } from './BookingType'; // Assuming BookingType.tsx is in the same directory. Adjust path if needed.
+
+// Stub for updateOrderGroup until the real service is implemented
+const updateOrderGroup = async (_groupId: string, _orderId: string, _data: unknown): Promise<void> => {
+	// TODO: replace with real API call
+	throw new Error('updateOrderGroup is not implemented yet');
+};
 
 // The props for the OrderUpdate component
 interface Props {

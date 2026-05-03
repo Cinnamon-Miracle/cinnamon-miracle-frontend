@@ -38,7 +38,7 @@ interface UserInterface {
 const createSchema = (isEdit: boolean) => {
 	const baseSchema = z.object({
 		role: z.enum(['admin', 'staff', 'root'], {
-			required_error: 'Role is required'
+			message: 'Role is required'
 		}),
 		firstName: z.string().min(2, 'Must be at least 2 characters').max(100, 'Must be maximum 100 characters').trim(),
 		lastName: z.string().min(2, 'Must be at least 2 characters').max(100, 'Must be maximum 100 characters').trim(),
@@ -94,9 +94,8 @@ interface Props {
 	onSuccess: () => void;
 }
 
-// Updated FormValues to include profilePicture
 type FormValues = {
-	role: string;
+	role: 'admin' | 'staff' | 'root' | string;
 	firstName: string;
 	lastName: string;
 	email: string;
@@ -169,7 +168,8 @@ function UsersForm({
 			address: '',
 			profilePicture: ''
 		},
-		resolver: zodResolver(schema)
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		resolver: zodResolver(schema) as any
 	});
 
 	// Watch form fields

@@ -92,7 +92,8 @@ const ReceivedEditModel: React.FC<Props> = ({
 
 	const fetchAllProductsFromBackend = async () => {
 		try {
-			const response: ApiResponse = await fetchAllProducts(0, 100);
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			const response = await fetchAllProducts(0, 100) as ApiResponse;
 			console.log('Fetched products:', response.products);
 			setProducts(response.products);
 			setProductOptions(

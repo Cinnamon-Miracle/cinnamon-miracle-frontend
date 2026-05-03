@@ -13,6 +13,8 @@ interface Props {
 	disablePastDate?:boolean;
 	min?:any;
 	max?:any;
+	size?:string;
+	fullWidth?:boolean;
 }
 
 function TextFormDateField({

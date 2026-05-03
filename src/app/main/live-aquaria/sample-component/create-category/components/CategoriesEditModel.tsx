@@ -3,16 +3,16 @@ import { Button, Grid } from '@mui/material';
 import { Form, Formik, FormikHelpers } from 'formik';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
-import NavigationViewComp from '../../../../common/FormComponents/NavigationViewComp';
-import MaterialTableWrapper from '../../../../common/tableComponents/MaterialTableWrapper';
-import CategoryEditModel from './components/CategoryEditModel';
-import NewCategoryActiveComp from './components/NewCategoryActiveComp';
-import CategoryDeleteAlert from './components/CategoryDeleteAlert';
+import NavigationViewComp from '../../../../../common/FormComponents/NavigationViewComp';
+import MaterialTableWrapper from '../../../../../common/tableComponents/MaterialTableWrapper';
+import CategoryEditModel from './CategoryEditModel';
+import NewCategoryActiveComp from './NewCategoryActiveComp';
+import CategoryDeleteAlert from './CategoryDeleteAlert';
 import {
 	fetchAllCategoriesWithPagination,
-	updateCategoryStatus,
+	updateCategory as updateCategoryStatus,
 	deleteCategory,
-} from '../../../../axios/services/mega-city-services/category-services/Category';
+} from '../../../../../axios/services/mega-city-services/category-services/Category';
 
 // Define interfaces based on API response
 interface Category {
@@ -51,6 +51,7 @@ interface TableColumn {
 	cellStyle: {
 		padding: string;
 	};
+	render?: (rowData: any) => any;
 }
 
 interface CategoryModifiedData {
@@ -272,7 +273,7 @@ function Category(): JSX.Element {
 					isOpen={isOpenNewCategoryModal}
 					toggleModal={toggleNewCategoryModal}
 					isTableMode="new"
-					clickedRowData={{}}
+					clickedRowData={{} as any}
 					fetchAllCategories={fetchCategories}
 				/>
 			)}

@@ -316,7 +316,7 @@ function UserPermissionsApp() {
 											fullWidth
 											placeholder="Select Role"
 											error={touched.status && Boolean(errors.status)}
-											helperText={touched.status && errors.status}
+											helperText={touched.status && errors.status as string}
 										/>
 									)}
 									value={values.status || null} // Set the current object value or null

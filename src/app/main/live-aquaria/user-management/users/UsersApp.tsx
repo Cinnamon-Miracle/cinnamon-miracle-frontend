@@ -19,8 +19,8 @@ interface AdvanceFilteringTypes {
 	mobile: string;
 }
 
-// Updated UserInterface to include profilePicture and correct phone field
-interface UserInterface {
+// Updated UserRow to include profilePicture and correct phone field
+interface UserRow {
 	id: string;
 	firstName: string;
 	lastName: string;
@@ -70,17 +70,18 @@ interface ApiResponse {
 	}>;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const UsersApp: React.FC = () => {
 	const [pageNo, setPageNo] = useState<number>(0);
 	const [pageSize, setPageSize] = useState<number>(5);
-	const [users, setUsers] = useState<UserInterface[]>([]);
+	const [users, setUsers] = useState<UserRow[]>([]);
 	const [isTableLoading, setTableLoading] = useState<boolean>(false);
 	const [count, setCount] = useState<number>(0);
 	const [isModelOpen, setIsModelOpen] = useState<boolean>(false);
 	const [isAdd, setIsAdd] = useState<boolean>(false);
 	const [isEdit, setIsEdit] = useState<boolean>(false);
 	const [isView, setIsView] = useState<boolean>(false);
-	const [selectedRow, setSelectedRow] = useState<UserInterface | null>(null);
+	const [selectedRow, setSelectedRow] = useState<UserRow | null>(null);
 
 	const userRole = localStorage.getItem('loginUserRole');
 	const isRestricted = userRole === 'staff';
@@ -96,11 +97,12 @@ const UsersApp: React.FC = () => {
 	const fetchAllGuidelines = useCallback(async () => {
 		setTableLoading(true);
 		try {
-			const response: ApiResponse = await fetchAllUsersByPagination(pageNo, pageSize);
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			const response = await fetchAllUsersByPagination(pageNo, pageSize) as ApiResponse;
 
 			if (response?.users && Array.isArray(response.users) && response.pagination) {
 				// Correctly map all fields including profilePicture
-				const transformedUsers: UserInterface[] = response.users.map((user) => ({
+				const transformedUsers: UserRow[] = response.users.map((user) => ({
 					id: user._id || '',
 					firstName: user.firstName || '',
 					lastName: user.lastName || '',
@@ -157,7 +159,7 @@ const UsersApp: React.FC = () => {
 
 	// MODIFICATION 2: Added a handler to be passed to the table component
 	const tableRowDeleteHandler = useCallback(
-		(rowData: UserInterface) => {
+		(rowData: UserRow) => {
 			if (rowData.role === 'DEVELOPER') {
 				toast.error("Cannot delete a user with the 'DEVELOPER' role.");
 				return;
@@ -176,7 +178,7 @@ const UsersApp: React.FC = () => {
 		{
 			title: t('First Name'),
 			field: 'firstName',
-			render: (rowData: UserInterface) => {
+			render: (rowData: UserRow) => {
 				if (rowData.role === 'DEVELOPER') {
 					return (
 						<span>
@@ -191,7 +193,7 @@ const UsersApp: React.FC = () => {
 		{
 			title: t('Last Name'),
 			field: 'lastName',
-			render: (rowData: UserInterface) => {
+			render: (rowData: UserRow) => {
 				if (rowData.role === 'DEVELOPER') {
 					return (
 						<span>
@@ -206,7 +208,7 @@ const UsersApp: React.FC = () => {
 		{
 			title: t('Email'),
 			field: 'email',
-			render: (rowData: UserInterface) => {
+			render: (rowData: UserRow) => {
 				if (rowData.role === 'DEVELOPER') {
 					return (
 						<span>
@@ -221,7 +223,7 @@ const UsersApp: React.FC = () => {
 		{
 			title: t('Password'),
 			field: 'password',
-			render: (rowData: UserInterface) => {
+			render: (rowData: UserRow) => {
 				if (rowData.role === 'DEVELOPER') {
 					return (
 						<span>
@@ -237,7 +239,7 @@ const UsersApp: React.FC = () => {
 			title: t('Role'),
 			field: 'role',
 			cellStyle: { padding: '4px 8px' },
-			render: (rowData: UserInterface) => {
+			render: (rowData: UserRow) => {
 				// Colors: STAFF is Green, ADMIN is Blue, ROOT is Red
 				const roleColors: Record<string, { text: string; bg: string }> = {
 					STAFF: { text: '#388E3C', bg: '#E8F5E9' },
@@ -278,7 +280,7 @@ const UsersApp: React.FC = () => {
 	];
 
 	const handleFormModelOpen = useCallback(
-		(isNew: boolean, isEditMode: boolean, isViewMode: boolean, selectedData: UserInterface | null) => {
+		(isNew: boolean, isEditMode: boolean, isViewMode: boolean, selectedData: UserRow | null) => {
 			setIsAdd(isNew);
 			setIsEdit(isEditMode);
 			setIsView(isViewMode);
@@ -289,14 +291,14 @@ const UsersApp: React.FC = () => {
 	);
 
 	const tableRowViewHandler = useCallback(
-		(rowData: UserInterface) => {
+		(rowData: UserRow) => {
 			handleFormModelOpen(false, false, true, rowData);
 		},
 		[handleFormModelOpen]
 	);
 
 	const tableRowEditHandler = useCallback(
-		(rowData: UserInterface) => {
+		(rowData: UserRow) => {
 			handleFormModelOpen(false, true, false, rowData);
 		},
 		[handleFormModelOpen]
@@ -396,7 +398,7 @@ const UsersApp: React.FC = () => {
 					isAdd={isAdd}
 					isEdit={isEdit}
 					isView={isView}
-					selectedRow={selectedRow}
+					selectedRow={selectedRow as any}
 					setIsFormOpen={setIsModelOpen}
 					onCloseHandler={onCloseHandler}
 					onSuccess={fetchAllGuidelines} // Pass onSuccess handler
