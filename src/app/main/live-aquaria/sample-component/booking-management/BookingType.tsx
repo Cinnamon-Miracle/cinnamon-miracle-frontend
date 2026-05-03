@@ -415,7 +415,8 @@ function NewOrders() {
 			});
 
 			pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-			pdf.save(`Invoice-${new Date().toISOString().replace(/[-:.TZ]/g, '')}.pdf`);
+			const invoiceTimestamp = new Date().toISOString().replace(/\D/g, '');
+			pdf.save(`Invoice-${invoiceTimestamp}.pdf`);
 
 			setEmailStatus('success');
 			toast.success('Invoice downloaded successfully');
