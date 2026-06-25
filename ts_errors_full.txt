@@ -1,1 +1,0 @@
-src/app/main/dashboards/analytics/widgets/VisitorsOverviewWidget.tsx(23,10): error TS1180: Property destructuring pattern expected.
