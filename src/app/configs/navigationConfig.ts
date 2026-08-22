@@ -33,14 +33,14 @@ const navigationConfig: FuseNavItemType[] = [
 				url: '/dashboards/analytics',
 				auth: ['admin']
 			},
-			{
-				id: 'dashboard.ai',
-				title: 'AI Advisor',
-				type: 'item',
-				icon: 'heroicons-outline:sparkles',
-				url: '/dashboards/chatbot',
-				auth: ['admin']
-			}
+			// {
+			// 	id: 'dashboard.ai',
+			// 	title: 'AI Advisor',
+			// 	type: 'item',
+			// 	icon: 'heroicons-outline:sparkles',
+			// 	url: '/dashboards/chatbot',
+			// 	auth: ['admin']
+			// }
 		]
 	},
 
