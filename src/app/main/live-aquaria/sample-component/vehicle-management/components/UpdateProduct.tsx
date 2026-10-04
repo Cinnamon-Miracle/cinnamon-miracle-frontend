@@ -201,7 +201,7 @@ function UpdateProduct({
 			const response = await fetch('https://wasenderapi.com/api/send-message', {
 				method: 'POST',
 				headers: {
-					Authorization: 'Bearer 49ab96cb4a56b35311b75b33b9d822f0ae4d94b1442b3831574ad7689425216f',
+					Authorization: 'Bearer bc4748d98fbbc141d5ac7784d9d48f11893902a7066be54a21f4e8ced7fb5922',
 					'Content-Type': 'application/json'
 				},
 				body: JSON.stringify({

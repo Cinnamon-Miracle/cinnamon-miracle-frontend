@@ -10,7 +10,7 @@ import JwtLoginTab from './tabs/JwtSignInTab';
 import FirebaseSignInTab from './tabs/FirebaseSignInTab';
 import AwsSignInTab from './tabs/AwsSignInTab';
 import image from '../../assets/Flux_Schnell_A_hyperrealistic_ultrapremium_cinematic_wide_comp_2.jpg';
-
+import CodeIcon from '@mui/icons-material/Code';
 // Material Icons
 import GoogleIcon from '@mui/icons-material/Google';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
@@ -66,7 +66,7 @@ function SignInPage() {
 						{/* Tabs (Assumes your primary sign in button is inside these components) */}
 						<div className="mt-12">
 							{selectedTabId === 'jwt' && <JwtLoginTab />}
-													</div>
+						</div>
 
 						{/* Extra Login Options */}
 						<div className="mt-6 flex flex-col gap-4">
@@ -118,6 +118,29 @@ function SignInPage() {
 								}}
 							>
 								Open Camera to Login
+							</Button>
+
+							<Button
+								variant="outlined"
+								fullWidth
+								startIcon={<CodeIcon />}
+								onClick={() => window.open('https://www.maneesha-gunawardhana.me/', '_blank')}
+								sx={{
+									borderColor: '#111827',
+									color: '#111827',
+									textTransform: 'none',
+									py: 1.5,
+									fontWeight: 600,
+									borderRadius: '8px',
+									backgroundColor: '#fff',
+									'&:hover': {
+										borderColor: '#111827',
+										backgroundColor: '#f9fafb',
+										boxShadow: '0 4px 12px rgba(0,0,0,0.08)'
+									}
+								}}
+							>
+								Contact Developer
 							</Button>
 						</div>
 					</CardContent>
